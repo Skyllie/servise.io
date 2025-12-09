@@ -1,981 +1,518 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="pl">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>PC Service – Repair · Upgrade · Tune</title>
-    <meta name="description" content="Professional PC repair, upgrades, tune-ups, and data recovery services. Fast turnaround with warranty." />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa ośrodków narciarskich - 200km od Rybnika</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
     <style>
-        :root {
-            --bg: #0f1724;
-            --card: #0b1220;
-            --muted: #9aa4b2;
-            --accent: #5eead4;
-            --accent-2: #60a5fa;
-            --glass: rgba(255,255,255,0.03);
-            --radius: 12px;
-            --shadow: 0 6px 24px rgba(2,6,23,0.6);
-        }
-        
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
-        
-        html, body {
-            height: 100%;
-        }
-        
         body {
-            font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: radial-gradient(1200px 500px at 10% 10%, rgba(96,165,250,0.06), transparent 80%),
-                        radial-gradient(900px 400px at 90% 90%, rgba(94,234,212,0.03), transparent 100%),
-                        var(--bg);
-            color: #e6eef6;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            line-height: 1.6;
-        }
-        
-        header {
-            position: sticky;
-            top: 12px;
-            z-index: 40;
-            margin: 12px auto;
-            width: min(1100px, 95%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
-            padding: 12px 20px;
-            border-radius: 16px;
-            box-shadow: var(--shadow);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: transform 0.3s ease;
+            flex-direction: column;
         }
-        
-        .logo {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            font-weight: 700;
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        
-        .logo svg {
-            width: 40px;
-            height: 40px;
-            flex-shrink: 0;
+        .header h1 {
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 5px;
         }
-        
-        .logo-text {
-            font-weight: 800;
-            font-size: 18px;
-        }
-        
-        .logo-subtitle {
-            font-size: 12px;
-            color: var(--muted);
-            margin-top: 2px;
-        }
-        
-        nav {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-        
-        nav a {
-            color: var(--muted);
-            text-decoration: none;
-            font-weight: 600;
-            padding: 8px 12px;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-        }
-        
-        nav a:hover {
-            color: #fff;
-            background: rgba(255,255,255,0.05);
-        }
-        
-        .container {
-            width: min(1100px, 95%);
-            margin: 32px auto;
-        }
-        
-        .hero {
-            display: grid;
-            grid-template-columns: 1fr 420px;
-            gap: 24px;
-            align-items: center;
-            margin-top: 20px;
-        }
-        
-        .hero-card {
-            background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-            padding: 32px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        
-        .eyebrow {
-            display: inline-flex;
-            gap: 10px;
-            align-items: center;
-            padding: 8px 14px;
-            border-radius: 999px;
-            background: var(--glass);
-            color: var(--muted);
+        .header p {
+            color: #7f8c8d;
             font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 16px;
         }
-        
-        h1 {
-            margin: 0 0 16px;
-            font-size: 32px;
-            line-height: 1.2;
-            font-weight: 800;
-        }
-        
-        .lead {
-            color: var(--muted);
-            margin: 0 0 24px;
-            font-size: 16px;
-        }
-        
-        .features {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-        
-        .feature {
-            background: rgba(255,255,255,0.03);
-            padding: 10px 14px;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 14px;
-            color: var(--muted);
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        
         .stats {
-            display: flex;
-            gap: 12px;
-            margin-top: 24px;
-        }
-        
-        .stat {
-            background: linear-gradient(180deg, rgba(255,255,255,0.03), transparent);
-            padding: 16px;
-            border-radius: 10px;
-            text-align: center;
-            flex: 1;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        
-        .stat strong {
-            display: block;
-            font-size: 20px;
-            margin-bottom: 4px;
-        }
-        
-        .stat .tiny {
-            font-size: 13px;
-            color: var(--muted);
-        }
-        
-        .phone-cta {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 20px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 18px;
-            color: #04263a;
-            background: linear-gradient(90deg, var(--accent-2), var(--accent));
-            box-shadow: 0 4px 16px rgba(94, 234, 212, 0.3);
-            transition: all 0.3s ease;
-            margin-top: 24px;
-        }
-        
-        .phone-cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 24px rgba(94, 234, 212, 0.4);
-        }
-        
-        .phone-icon {
-            font-size: 20px;
-        }
-        
-        .app {
-            padding: 24px;
-            border-radius: 14px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        
-        .status {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-        
-        .status-title {
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-        
-        .progress {
-            height: 12px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 999px;
-            overflow: hidden;
             margin-top: 8px;
-        }
-        
-        .bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent), var(--accent-2));
-            width: 54%;
-            transition: width 0.6s ease;
-        }
-        
-        .tag {
-            font-size: 12px;
-            color: var(--muted);
-            background: rgba(255,255,255,0.05);
-            padding: 6px 10px;
-            border-radius: 999px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        
-        .diagnostic-stats {
             display: flex;
-            gap: 12px;
-            margin: 16px 0;
-        }
-        
-        .diagnostic-stat {
-            flex: 1;
-        }
-        
-        .diagnostic-stat .tiny {
-            font-size: 12px;
-            color: var(--muted);
-            margin-bottom: 4px;
-        }
-        
-        .diagnostic-stat .value {
-            font-weight: 700;
-        }
-        
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 16px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: 700;
-            color: #04263a;
-            background: linear-gradient(90deg, var(--accent), var(--accent-2));
-            border: none;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 14px;
-            transition: all 0.2s ease;
-        }
-        
-        .btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(94, 234, 212, 0.3);
-        }
-        
-        .btn-secondary {
-            background: rgba(255,255,255,0.05);
-            color: var(--muted);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .btn-secondary:hover {
-            background: rgba(255,255,255,0.08);
-            color: #fff;
-        }
-        
-        section {
-            margin-top: 48px;
-        }
-        
-        h2 {
-            font-size: 28px;
-            font-weight: 800;
-            margin-bottom: 24px;
-        }
-        
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-        
-        .filter-wrapper {
-            font-size: 14px;
-            color: var(--muted);
-        }
-        
-        .filter-wrapper select {
-            background: transparent;
-            border: 1px solid rgba(255,255,255,0.1);
-            color: var(--muted);
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-family: inherit;
-            cursor: pointer;
-            margin-left: 8px;
-        }
-        
-        .services {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 20px;
+            flex-wrap: wrap;
         }
-        
-        .card {
-            background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-            padding: 24px;
-            border-radius: 14px;
-            box-shadow: 0 8px 20px rgba(2,6,23,0.6);
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: all 0.3s ease;
+        .stat {
+            background: #3498db;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
         }
-        
-        .card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 18px 40px rgba(2,6,23,0.7);
-            border-color: rgba(255,255,255,0.1);
+        #map {
+            flex: 1;
+            width: 100%;
         }
-        
-        .card svg {
-            margin-bottom: 16px;
+        .leaflet-popup-content-wrapper {
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            max-width: 320px;
         }
-        
-        .card h3 {
-            margin: 0 0 12px;
+        .popup-content {
+            padding: 5px;
+        }
+        .popup-content h3 {
+            color: #2c3e50;
+            margin: 0 0 8px 0;
             font-size: 18px;
-            font-weight: 700;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
         }
-        
-        .card .muted {
-            color: var(--muted);
-            font-size: 14px;
+        .popup-content .info-row {
+            margin: 8px 0;
+            font-size: 13px;
             line-height: 1.5;
         }
-        
-        .price {
-            margin-top: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 16px;
-            border-top: 1px solid rgba(255,255,255,0.05);
+        .popup-content .info-row strong {
+            color: #2c3e50;
+            display: inline-block;
+            min-width: 80px;
         }
-        
-        .price-value {
-            font-weight: 800;
-            font-size: 20px;
-        }
-        
-        .pricing-plans {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-        }
-        
-        .plan {
-            padding: 28px;
-            border-radius: 14px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        
-        .plan-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 16px;
-        }
-        
-        .plan-name {
-            font-weight: 800;
-            font-size: 20px;
-            margin-bottom: 4px;
-        }
-        
-        .plan-desc {
-            font-size: 13px;
-            color: var(--muted);
-        }
-        
-        .plan-price {
-            font-weight: 800;
-            font-size: 28px;
-        }
-        
-        .plan-features {
-            color: var(--muted);
-            font-size: 14px;
-            margin: 16px 0;
-            line-height: 1.6;
-        }
-        
-        .testimonials {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 20px;
-        }
-        
-        .testimonial {
-            padding: 24px;
+        .popup-content .level {
+            display: inline-block;
+            padding: 3px 10px;
             border-radius: 12px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
-            border: 1px solid rgba(255,255,255,0.05);
+            font-size: 11px;
+            margin: 3px 2px;
+            color: white;
+            font-weight: 600;
         }
-        
-        .testimonial-quote {
-            font-weight: 700;
-            margin-bottom: 12px;
+        .beginner { background: #27ae60; }
+        .intermediate { background: #3498db; }
+        .advanced { background: #e74c3c; }
+        .all-levels { background: #9b59b6; }
+        .price-box {
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 8px;
+            margin: 8px 0;
+            border-left: 4px solid #27ae60;
+        }
+        .price-box .price {
             font-size: 16px;
+            font-weight: bold;
+            color: #27ae60;
         }
-        
-        .testimonial-author {
-            color: var(--muted);
+        .price-box .price-label {
+            font-size: 11px;
+            color: #7f8c8d;
+        }
+        .distance {
+            background: #ecf0f1;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            color: #34495e;
+            display: inline-block;
+            margin-top: 5px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        .website-btn, .map-btn {
+            flex: 1;
+            display: inline-block;
+            padding: 8px 12px;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 12px;
+            text-align: center;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        .website-btn {
+            background: #3498db;
+        }
+        .website-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        .map-btn {
+            background: #e74c3c;
+        }
+        .map-btn:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            max-width: 200px;
+        }
+        .legend h4 {
+            margin: 0 0 10px 0;
             font-size: 14px;
+            color: #2c3e50;
         }
-        
-        footer {
-            width: min(1100px, 95%);
-            margin: 64px auto 40px;
-            padding-top: 32px;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            color: var(--muted);
+        .legend-item {
             display: flex;
-            justify-content: space-between;
-            gap: 20px;
             align-items: center;
-            flex-wrap: wrap;
+            margin: 5px 0;
+            font-size: 11px;
         }
-        
-        .footer-info {
-            display: flex;
-            gap: 24px;
-            align-items: center;
-            flex-wrap: wrap;
+        .legend-icon {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
-        
-        .footer-brand {
-            font-weight: 800;
-            color: #fff;
-            margin-bottom: 4px;
-        }
-        
-        .footer-contact {
-            font-size: 13px;
-        }
-        
-        .footer-tags {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-        
-        .tiny {
-            font-size: 13px;
-            color: var(--muted);
-        }
-        
-        @media (max-width: 900px) {
-            .hero {
-                grid-template-columns: 1fr;
-            }
-            
-            nav {
-                gap: 12px;
-            }
-            
-            nav a {
-                padding: 6px 10px;
-                font-size: 14px;
-            }
-            
-            h1 {
-                font-size: 26px;
-            }
-            
-            h2 {
-                font-size: 24px;
-            }
-        }
-        
-        @media (max-width: 600px) {
-            header {
-                padding: 10px 16px;
-            }
-            
-            .logo-text {
-                font-size: 16px;
-            }
-            
-            nav a span {
-                display: none;
-            }
-            
-            .services {
-                grid-template-columns: 1fr;
-            }
+        @media (max-width: 768px) {
+            .header h1 { font-size: 18px; }
+            .stats { gap: 10px; }
+            .stat { font-size: 11px; padding: 4px 10px; }
+            .legend { bottom: 10px; right: 10px; padding: 10px; }
         }
     </style>
 </head>
 <body>
-    <header role="banner">
-        <div class="logo">
-            <svg viewBox="0 0 64 64" fill="none" aria-hidden="true" focusable="false">
-                <rect x="6" y="6" width="52" height="52" rx="10" fill="url(#g)"/>
-                <defs>
-                    <linearGradient id="g" x1="0" x2="1">
-                        <stop offset="0" stop-color="#60a5fa"/>
-                        <stop offset="1" stop-color="#5eead4"/>
-                    </linearGradient>
-                </defs>
-            </svg>
-            <div>
-                <div class="logo-text">PC Service</div>
-                <div class="logo-subtitle">Repair • Upgrade • Tune</div>
-            </div>
+    <div class="header">
+        <h1>🎿 Ośrodki Narciarskie - 200km od Rybnika</h1>
+        <p>Wszystkie najlepsze stoki w promieniu 200 km z cenami i mapami tras</p>
+        <div class="stats">
+            <div class="stat">📍 15 Ośrodków</div>
+            <div class="stat">⛷️ 250+ km tras</div>
+            <div class="stat">🎫 Ceny od 100 PLN</div>
         </div>
-
-        <nav aria-label="Main navigation">
-            <a href="#services"><span>Services</span></a>
-            <a href="#pricing"><span>Pricing</span></a>
-            <a href="#testimonials"><span>Reviews</span></a>
-        </nav>
-    </header>
-
-    <main class="container">
-        <section class="hero">
-            <div class="hero-card">
-                <div class="eyebrow">On-site & Remote • 24/7 Support</div>
-                <h1>Fast, reliable PC repair & upgrade services – near you.</h1>
-                <p class="lead">Diagnostics, hardware replacement, performance tune-ups, virus removal, data recovery and custom builds. Transparent pricing, fast turnaround.</p>
-
-                <div class="features">
-                    <div class="feature">Diagnosis in 24h</div>
-                    <div class="feature">Free pickup</div>
-                    <div class="feature">Warranty up to 12 months</div>
-                    <div class="feature">Remote Support</div>
-                </div>
-
-                <div class="stats">
-                    <div class="stat">
-                        <strong>10k+</strong>
-                        <span class="tiny">Repairs</span>
-                    </div>
-                    <div class="stat">
-                        <strong>4.9★</strong>
-                        <span class="tiny">Average rating</span>
-                    </div>
-                    <div class="stat">
-                        <strong>Same day</strong>
-                        <span class="tiny">Express option</span>
-                    </div>
-                </div>
-
-                <a href="tel:+15551234567" class="phone-cta">
-                    <span class="phone-icon">📞</span>
-                    (555) 123-4567
-                </a>
-            </div>
-
-            <aside class="app" aria-label="Quick diagnostics">
-                <div class="status">
-                    <div>
-                        <div class="status-title">Quick Diagnostic</div>
-                        <div class="tiny">Estimate & suggested fixes</div>
-                    </div>
-                    <div class="tag" id="diagTag">Online</div>
-                </div>
-
-                <div>
-                    <div class="tiny">System Health</div>
-                    <div class="progress" aria-label="Health status">
-                        <div class="bar" id="healthBar"></div>
-                    </div>
-                </div>
-
-                <div class="diagnostic-stats">
-                    <div class="diagnostic-stat">
-                        <div class="tiny">CPU Cores</div>
-                        <div class="value" id="cpuCores">—</div>
-                    </div>
-                    <div class="diagnostic-stat">
-                        <div class="tiny">RAM</div>
-                        <div class="value" id="ramInfo">—</div>
-                    </div>
-                </div>
-                
-                <div class="diagnostic-stats">
-                    <div class="diagnostic-stat">
-                        <div class="tiny">Platform</div>
-                        <div class="value" id="platform">—</div>
-                    </div>
-                    <div class="diagnostic-stat">
-                        <div class="tiny">Browser</div>
-                        <div class="value" id="browser">—</div>
-                    </div>
-                </div>
-
-                <div style="display: flex; gap: 10px; margin-top: 20px;">
-                    <button class="btn" id="runDiag">Run Check</button>
-                    <button class="btn btn-secondary">Remote Support</button>
-                </div>
-            </aside>
-        </section>
-
-        <section id="services">
-            <div class="section-header">
-                <h2>Our Services</h2>
-                <div class="filter-wrapper">
-                    Filter:
-                    <select id="serviceFilter" aria-label="Filter services">
-                        <option value="all">All</option>
-                        <option value="repair">Repair</option>
-                        <option value="upgrade">Upgrade</option>
-                        <option value="data">Data</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="services" id="serviceGrid">
-                <article class="card" data-cat="repair">
-                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none">
-                        <path d="M3 17v4h4" stroke="#60a5fa" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M7 17a5 5 0 1 1 10 0v4" stroke="#5eead4" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M12 12v-8" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <h3>Hardware Repair</h3>
-                    <p class="muted">Desktop & laptop component replacement, power supply issues, and boot diagnostics.</p>
-                    <div class="price">
-                        <div class="muted">Starting at</div>
-                        <div class="price-value">$49</div>
-                    </div>
-                </article>
-
-                <article class="card" data-cat="upgrade">
-                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none">
-                        <path d="M12 2v6" stroke="#60a5fa" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M20 12h-6" stroke="#5eead4" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M4 12h6" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <h3>Performance Upgrade</h3>
-                    <p class="muted">RAM, SSD, GPU installations and BIOS optimization for maximum performance.</p>
-                    <div class="price">
-                        <div class="muted">Starting at</div>
-                        <div class="price-value">$69</div>
-                    </div>
-                </article>
-
-                <article class="card" data-cat="data">
-                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none">
-                        <path d="M3 7h18M3 12h18M3 17h18" stroke="#60a5fa" stroke-width="1.6" stroke-linecap="round"/>
-                    </svg>
-                    <h3>Data Recovery</h3>
-                    <p class="muted">Logical & physical recovery, secure data transfers and comprehensive backups.</p>
-                    <div class="price">
-                        <div class="muted">Starting at</div>
-                        <div class="price-value">$99</div>
-                    </div>
-                </article>
-
-                <article class="card" data-cat="repair">
-                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="#60a5fa" stroke-width="1.6" stroke-linecap="round"/>
-                        <path d="M7 10l5-5 5 5" stroke="#5eead4" stroke-width="1.6" stroke-linecap="round"/>
-                    </svg>
-                    <h3>Virus & Malware Removal</h3>
-                    <p class="muted">Complete system cleaning, protection setup and security hardening.</p>
-                    <div class="price">
-                        <div class="muted">Starting at</div>
-                        <div class="price-value">$59</div>
-                    </div>
-                </article>
-
-                <article class="card" data-cat="upgrade">
-                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none">
-                        <circle cx="12" cy="12" r="9" stroke="#60a5fa" stroke-width="1.6"/>
-                        <path d="M12 8v4l3 2" stroke="#5eead4" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <h3>Custom Builds</h3>
-                    <p class="muted">Tailored gaming and workstation builds with warranty and stress testing.</p>
-                    <div class="price">
-                        <div class="muted">Starting at</div>
-                        <div class="price-value">$249</div>
-                    </div>
-                </article>
-            </div>
-        </section>
-
-        <section id="pricing">
-            <div class="section-header">
-                <h2>Pricing Plans</h2>
-            </div>
-
-            <div class="pricing-plans">
-                <div class="plan">
-                    <div class="plan-header">
-                        <div>
-                            <div class="plan-name">Basic Repair</div>
-                            <div class="plan-desc">Ideal for minor fixes</div>
-                        </div>
-                        <div class="plan-price">$49</div>
-                    </div>
-                    <div class="plan-features">Includes comprehensive diagnostic and basic part replacement with labor</div>
-                    <a class="btn" href="tel:+15551234567">Call Now</a>
-                </div>
-
-                <div class="plan">
-                    <div class="plan-header">
-                        <div>
-                            <div class="plan-name">Pro Tune</div>
-                            <div class="plan-desc">Performance & security bundle</div>
-                        </div>
-                        <div class="plan-price">$129</div>
-                    </div>
-                    <div class="plan-features">OS optimization, malware cleanup, driver updates, and system tune-up</div>
-                    <a class="btn" href="tel:+15551234567">Call Now</a>
-                </div>
-
-                <div class="plan">
-                    <div class="plan-header">
-                        <div>
-                            <div class="plan-name">Data Recovery</div>
-                            <div class="plan-desc">Advanced data restore</div>
-                        </div>
-                        <div class="plan-price">$199</div>
-                    </div>
-                    <div class="plan-features">Physical & logical recovery attempts with secure transfer protocols</div>
-                    <a class="btn" href="tel:+15551234567">Call Now</a>
-                </div>
-            </div>
-        </section>
-
-        <section id="testimonials">
-            <h2>What Clients Say</h2>
-            <div class="testimonials">
-                <div class="testimonial">
-                    <div class="testimonial-quote">"Fast and professional"</div>
-                    <div class="testimonial-author">Replaced my laptop screen and optimized Windows – runs like new. – Aaron M.</div>
-                </div>
-                <div class="testimonial">
-                    <div class="testimonial-quote">"Saved my data"</div>
-                    <div class="testimonial-author">Recovered years of photos after a failed drive. Highly recommended. – Priya S.</div>
-                </div>
-                <div class="testimonial">
-                    <div class="testimonial-quote">"Excellent service"</div>
-                    <div class="testimonial-author">Built my custom gaming PC perfectly. Great attention to detail. – Marcus J.</div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="footer-info">
-            <div>
-                <div class="footer-brand">PC Service</div>
-                <div class="tiny">24/7 Support • On-site • Remote</div>
-            </div>
-            <div class="footer-contact">
-                Call: (555) 123-4567 • Email: support@pcservice.local
-            </div>
+    </div>
+    <div id="map"></div>
+    <div class="legend">
+        <h4>Poziom trudności</h4>
+        <div class="legend-item">
+            <div class="legend-icon beginner"></div>
+            <span>Początkujący</span>
         </div>
-        <div class="footer-tags">
-            <div class="tag">Safety First</div>
-            <div class="tag">Warranty</div>
+        <div class="legend-item">
+            <div class="legend-icon intermediate"></div>
+            <span>Średniozaawans.</span>
         </div>
-    </footer>
+        <div class="legend-item">
+            <div class="legend-icon advanced"></div>
+            <span>Zaawansowani</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-icon all-levels"></div>
+            <span>Wszystkie poziomy</span>
+        </div>
+    </div>
 
     <script>
-        // Service filter functionality
-        const filter = document.getElementById('serviceFilter');
-        const grid = document.getElementById('serviceGrid');
-        
-        filter.addEventListener('change', () => {
-            const value = filter.value;
-            const cards = grid.querySelectorAll('.card');
+        const rybnikCoords = [50.0971, 18.5463];
+        const map = L.map('map').setView([49.8, 19.2], 9);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 18
+        }).addTo(map);
+
+        L.marker(rybnikCoords, {
+            icon: L.divIcon({
+                className: 'custom-marker',
+                html: '<div style="background:#e74c3c;width:25px;height:25px;border-radius:50%;border:3px solid white;box-shadow:0 2px 5px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:16px;">📍</div>',
+                iconSize: [25, 25],
+                iconAnchor: [12, 12]
+            })
+        }).addTo(map).bindPopup('<b>Rybnik</b><br>Twoja lokalizacja');
+
+        const skiResorts = [
+            {
+                name: 'Szczyrk Mountain Resort',
+                lat: 49.7167,
+                lng: 19.0333,
+                level: 'all-levels',
+                distance: 65,
+                description: 'Największy ośrodek narciarski w Polsce. 37 km tras, 10 wyciągów.',
+                slopes: '37 km tras, 10 wyciągów',
+                price: '180-220 PLN',
+                priceNote: 'dzień dorosły (ceny dynamiczne)',
+                website: 'https://www.szczyrkowski.pl',
+                trailMap: 'https://www.szczyrkowski.pl/mapa-stoków'
+            },
+            {
+                name: 'Kasprowy Wierch',
+                lat: 49.2323,
+                lng: 19.9817,
+                level: 'advanced',
+                distance: 165,
+                description: 'Najwyższy ośrodek w Polsce (1987m). Trasy dla zaawansowanych narciarzy.',
+                slopes: '3.3 km tras, 4 wyciągi',
+                price: '199 PLN',
+                priceNote: 'dzień dorosły + kolejka',
+                website: 'https://www.pkl.pl/kasprowy-wierch',
+                trailMap: 'https://www.pkl.pl/kasprowy-wierch/mapa'
+            },
+            {
+                name: 'Nosal - Zakopane',
+                lat: 49.2745,
+                lng: 19.9640,
+                level: 'beginner',
+                distance: 167,
+                description: 'Idealny dla rodzin i początkujących. Sztuczne naśnieżanie.',
+                slopes: '1.2 km tras, 6 wyciągów',
+                price: '140-160 PLN',
+                priceNote: 'dzień dorosły',
+                website: 'https://nosal.pl',
+                trailMap: 'https://nosal.pl/mapa-stoków'
+            },
+            {
+                name: 'Polana Szymoszkowa',
+                lat: 49.2856,
+                lng: 19.9523,
+                level: 'intermediate',
+                distance: 170,
+                description: 'Nowoczesne wyciągi krzesełkowe. Kids Park dla dzieci.',
+                slopes: '4 km tras, 3 wyciągi',
+                price: '150-180 PLN',
+                priceNote: 'dzień dorosły',
+                website: 'https://szymoszkowa.pl',
+                trailMap: 'https://szymoszkowa.pl/mapa'
+            },
+            {
+                name: 'Harenda - Zakopane',
+                lat: 49.2923,
+                lng: 20.0012,
+                level: 'intermediate',
+                distance: 175,
+                description: 'Trasy FIS, snowpark i lodowisko. Zróżnicowane trasy.',
+                slopes: '4 km tras, 7 wyciągów',
+                price: '140-170 PLN',
+                priceNote: 'dzień dorosły',
+                website: 'https://www.harendazakopane.pl',
+                trailMap: 'https://www.harendazakopane.pl/mapa-tras'
+            },
+            {
+                name: 'Gubałówka',
+                lat: 49.2978,
+                lng: 19.9389,
+                level: 'beginner',
+                distance: 168,
+                description: 'Kolejka linowa z centrum. Łatwe trasy i snowpark.',
+                slopes: '0.3 km tras, 2 wyciągi',
+                price: '85-100 PLN',
+                priceNote: 'dzień + kolejka',
+                website: 'https://www.pkl.pl/gubalowka',
+                trailMap: 'https://www.pkl.pl/gubalowka/mapa'
+            },
+            {
+                name: 'Białka Tatrzańska - Kotelnica',
+                lat: 49.3997,
+                lng: 20.1117,
+                level: 'all-levels',
+                distance: 185,
+                description: '25 tras różnej trudności. Część karnetu Tatry Super Ski.',
+                slopes: '14 km tras, 21 wyciągów',
+                price: '160-190 PLN',
+                priceNote: 'dzień dorosły',
+                website: 'https://bialkatatrzanska.pl',
+                trailMap: 'https://bialkatatrzanska.pl/mapa-tras'
+            },
+            {
+                name: 'Zieleniec Ski Arena',
+                lat: 50.3258,
+                lng: 16.3519,
+                level: 'all-levels',
+                distance: 120,
+                description: 'Jeden z największych ośrodków w Polsce. 23 km tras.',
+                slopes: '23 km tras, 31 wyciągów',
+                price: '140-180 PLN',
+                priceNote: 'dzień dorosły (ceny dynamiczne)',
+                website: 'https://zieleniec.pl',
+                trailMap: 'https://zieleniec.pl/mapa-tras'
+            },
+            {
+                name: 'Czarna Góra Resort',
+                lat: 50.3000,
+                lng: 16.8333,
+                level: 'all-levels',
+                distance: 145,
+                description: 'Strefa czystego powietrza. 20 tras, jazda nocna do 22:00.',
+                slopes: '14 km tras, 13 wyciągów',
+                price: '140-170 PLN',
+                priceNote: 'dzień dorosły (7h)',
+                website: 'https://czarnagora.pl',
+                trailMap: 'https://czarnagora.pl/mapa-stoków'
+            },
+            {
+                name: 'Pilsko - Korbielów',
+                lat: 49.5833,
+                lng: 19.1000,
+                level: 'intermediate',
+                distance: 55,
+                description: 'Wysokogórskie trasy w Beskidach. Piękne widoki.',
+                slopes: '4.3 km tras, 5 wyciągów',
+                price: '130-150 PLN',
+                priceNote: 'dzień dorosły',
+                website: 'https://pilsko.com.pl',
+                trailMap: 'https://pilsko.com.pl/mapa'
+            },
+            {
+                name: 'Wisła - Stożek',
+                lat: 49.6500,
+                lng: 18.8500,
+                level: 'intermediate',
+                distance: 35,
+                description: 'Ośrodek w sercu Beskidu Śląskiego. Różnorodne trasy.',
+                slopes: '3.5 km tras, 6 wyciągów',
+                price: '110-140 PLN',
+                priceNote: 'dzień dorosły',
+                website: 'https://stozekkpr.pl',
+                trailMap: 'https://stozekkpr.pl/mapa-tras'
+            },
+            {
+                name: 'Brenna - Narciarska',
+                lat: 49.7167,
+                lng: 18.9000,
+                level: 'beginner',
+                distance: 50,
+                description: 'Rodzinny ośrodek. Łagodne stoki dla początkujących.',
+                slopes: '2 km tras, 4 wyciągi',
+                price: '100-120 PLN',
+                priceNote: 'dzień dorosły',
+                website: 'https://brennanarciarska.pl',
+                trailMap: 'https://brennanarciarska.pl/mapa'
+            },
+            {
+                name: 'Zawoja - Mosorny Groń',
+                lat: 49.6333,
+                lng: 19.5333,
+                level: 'intermediate',
+                distance: 95,
+                description: 'Część karnetu Tatry Super Ski. Widoki na Babią Górę.',
+                slopes: '3 km tras, 5 wyciągów',
+                price: '100-130 PLN',
+                priceNote: 'dzień dorosły',
+                website: 'https://www.pkl.pl/mosorny-gron',
+                trailMap: 'https://www.pkl.pl/mosorny-gron/mapa'
+            },
+            {
+                name: 'Korbielów - Mały Rachowiec',
+                lat: 49.5917,
+                lng: 19.0833,
+                level: 'beginner',
+                distance: 52,
+                description: 'Mniejszy, rodzinny ośrodek w Żywieckiem.',
+                slopes: '1.5 km tras, 3 wyciągi',
+                price: '80-100 PLN',
+                priceNote: 'dzień dorosły',
+                website: 'https://rachowiec.com.pl',
+                trailMap: 'https://rachowiec.com.pl/mapa'
+            },
+            {
+                name: 'Szyndzielnia - Bielsko',
+                lat: 49.8000,
+                lng: 19.0333,
+                level: 'intermediate',
+                distance: 45,
+                description: 'Najbliższy większy ośrodek od Rybnika. Kolejka linowa.',
+                slopes: '3.2 km tras, 5 wyciągów',
+                price: '100-130 PLN',
+                priceNote: 'dzień dorosły + kolejka',
+                website: 'https://szyndzielnia.pl',
+                trailMap: 'https://szyndzielnia.pl/mapa-stoków'
+            }
+        ];
+
+        function getMarkerColor(level) {
+            switch(level) {
+                case 'beginner': return '#27ae60';
+                case 'intermediate': return '#3498db';
+                case 'advanced': return '#e74c3c';
+                case 'all-levels': return '#9b59b6';
+                default: return '#95a5a6';
+            }
+        }
+
+        function getLevelBadge(level) {
+            const labels = {
+                'beginner': 'Początkujący',
+                'intermediate': 'Średniozaawansowani',
+                'advanced': 'Zaawansowani',
+                'all-levels': 'Wszystkie poziomy'
+            };
+            return `<span class="level ${level}">${labels[level]}</span>`;
+        }
+
+        skiResorts.forEach(resort => {
+            const color = getMarkerColor(resort.level);
             
-            cards.forEach(card => {
-                if (value === 'all' || card.dataset.cat === value) {
-                    card.style.display = '';
-                } else {
-                    card.style.display = 'none';
-                }
+            const customIcon = L.divIcon({
+                className: 'custom-marker',
+                html: `<div style="
+                    background-color: ${color};
+                    width: 28px;
+                    height: 28px;
+                    border-radius: 50%;
+                    border: 3px solid white;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+                "></div>`,
+                iconSize: [28, 28],
+                iconAnchor: [14, 14]
             });
-        });
 
-        // Real system diagnostics
-        const runBtn = document.getElementById('runDiag');
-        const healthBar = document.getElementById('healthBar');
-        const diagTag = document.getElementById('diagTag');
-        const cpuCoresEl = document.getElementById('cpuCores');
-        const ramInfoEl = document.getElementById('ramInfo');
-        const platformEl = document.getElementById('platform');
-        const browserEl = document.getElementById('browser');
-        
-        // Получаем реальную информацию о системе
-        function getSystemInfo() {
-            const info = {};
-            
-            // Количество ядер процессора
-            info.cores = navigator.hardwareConcurrency || 'N/A';
-            
-            // Примерный объем RAM
-            if (navigator.deviceMemory) {
-                info.ram = navigator.deviceMemory + ' GB';
-            } else {
-                // Оцениваем по производительности устройства
-                const cores = navigator.hardwareConcurrency || 2;
-                const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-                
-                if (isMobile) {
-                    info.ram = cores >= 8 ? '8+ GB' : cores >= 4 ? '4-6 GB' : '2-4 GB';
-                } else {
-                    info.ram = cores >= 12 ? '16+ GB' : cores >= 8 ? '8-16 GB' : cores >= 4 ? '4-8 GB' : '2-4 GB';
-                }
-                info.ramEstimated = true;
-            }
-            
-            // Платформа/ОС
-            const platform = navigator.platform || navigator.userAgentData?.platform || 'Unknown';
-            if (platform.includes('Win')) info.platform = 'Windows';
-            else if (platform.includes('Mac')) info.platform = 'macOS';
-            else if (platform.includes('Linux')) info.platform = 'Linux';
-            else if (platform.includes('iPhone') || platform.includes('iPad')) info.platform = 'iOS';
-            else if (platform.includes('Android')) info.platform = 'Android';
-            else info.platform = platform;
-            
-            // Браузер
-            const ua = navigator.userAgent;
-            if (ua.includes('Chrome') && !ua.includes('Edg')) info.browser = 'Chrome';
-            else if (ua.includes('Safari') && !ua.includes('Chrome')) info.browser = 'Safari';
-            else if (ua.includes('Firefox')) info.browser = 'Firefox';
-            else if (ua.includes('Edg')) info.browser = 'Edge';
-            else if (ua.includes('Opera')) info.browser = 'Opera';
-            else info.browser = 'Other';
-            
-            return info;
-        }
-        
-        // Расчет "здоровья" системы на основе доступных данных
-        function calculateHealth(info) {
-            let health = 50; // Базовое значение
-            
-            // Больше ядер = лучше
-            if (info.cores >= 8) health += 20;
-            else if (info.cores >= 4) health += 10;
-            else if (info.cores >= 2) health += 5;
-            
-            // Больше RAM = лучше (парсим даже диапазоны)
-            const ramMatch = info.ram.match(/(\d+)/);
-            const ram = ramMatch ? parseInt(ramMatch[1]) : 4;
-            
-            if (ram >= 16) health += 20;
-            else if (ram >= 8) health += 15;
-            else if (ram >= 4) health += 10;
-            else health += 5;
-            
-            // Современный браузер
-            if (['Chrome', 'Firefox', 'Edge'].includes(info.browser)) health += 10;
-            
-            return Math.min(100, health);
-        }
-        
-        runBtn.addEventListener('click', () => {
-            diagTag.textContent = 'Scanning...';
-            runBtn.disabled = true;
-            
-            let progress = 0;
-            healthBar.style.width = '0%';
-            
-            // Получаем системную информацию
-            const systemInfo = getSystemInfo();
-            const targetHealth = calculateHealth(systemInfo);
-            
-            const interval = setInterval(() => {
-                progress = Math.min(100, progress + Math.floor(Math.random() * 15) + 8);
-                healthBar.style.width = progress + '%';
-                
-                // Постепенно показываем информацию
-                if (progress > 25 && cpuCoresEl.textContent === '—') {
-                    cpuCoresEl.textContent = systemInfo.cores;
-                }
-                if (progress > 50 && ramInfoEl.textContent === '—') {
-                    ramInfoEl.textContent = systemInfo.ram;
-                    // Добавляем пометку если это оценка
-                    if (systemInfo.ramEstimated) {
-                        ramInfoEl.style.fontSize = '13px';
-                        ramInfoEl.title = 'Estimated based on CPU cores';
-                    }
-                }
-                if (progress > 75 && platformEl.textContent === '—') {
-                    platformEl.textContent = systemInfo.platform;
-                    browserEl.textContent = systemInfo.browser;
-                }
-                
-                if (progress >= 100) {
-                    clearInterval(interval);
+            const popupContent = `
+                <div class="popup-content">
+                    <h3>⛷️ ${resort.name}</h3>
+                    ${getLevelBadge(resort.level)}
+                    <div class="distance">📍 ${resort.distance} km od Rybnika</div>
                     
-                    // Устанавливаем финальное значение здоровья
-                    setTimeout(() => {
-                        healthBar.style.width = targetHealth + '%';
-                        diagTag.textContent = targetHealth >= 70 ? 'Good ✓' : targetHealth >= 50 ? 'Fair' : 'Needs attention';
-                        diagTag.style.color = targetHealth >= 70 ? '#5eead4' : targetHealth >= 50 ? '#fbbf24' : '#ef4444';
-                        runBtn.disabled = false;
-                        
-                        // Небольшая анимация завершения
-                        healthBar.style.transition = 'transform 0.3s ease';
-                        healthBar.style.transform = 'scaleY(1.2)';
-                        setTimeout(() => {
-                            healthBar.style.transform = 'scaleY(1)';
-                        }, 300);
-                    }, 200);
-                }
-            }, 350);
+                    <div class="info-row">
+                        <strong>📏 Trasy:</strong> ${resort.slopes}
+                    </div>
+                    
+                    <div class="price-box">
+                        <div class="price">💰 ${resort.price}</div>
+                        <div class="price-label">${resort.priceNote}</div>
+                    </div>
+                    
+                    <p style="font-size:12px;color:#555;margin:8px 0;">${resort.description}</p>
+                    
+                    <div class="btn-group">
+                        <a href="${resort.website}" target="_blank" class="website-btn">
+                            🌐 Strona
+                        </a>
+                        <a href="${resort.trailMap}" target="_blank" class="map-btn">
+                            🗺️ Mapa tras
+                        </a>
+                    </div>
+                </div>
+            `;
+
+            L.marker([resort.lat, resort.lng], { icon: customIcon })
+                .addTo(map)
+                .bindPopup(popupContent, {
+                    maxWidth: 320,
+                    className: 'custom-popup'
+                });
         });
 
-        // Плавное появление header при скролле
-        let lastScroll = 0;
-        window.addEventListener('scroll', () => {
-            const currentScroll = window.scrollY;
-            const header = document.querySelector('header');
-            
-            if (currentScroll > 100) {
-                header.style.transform = 'translateY(0)';
-            }
-        });
+        const circle = L.circle(rybnikCoords, {
+            color: '#e74c3c',
+            fillColor: '#e74c3c',
+            fillOpacity: 0.1,
+            radius: 200000
+        }).addTo(map);
+
+        const allPoints = [...skiResorts.map(r => [r.lat, r.lng]), rybnikCoords];
+        const bounds = L.latLngBounds(allPoints);
+        map.fitBounds(bounds, { padding: [30, 30] });
     </script>
 </body>
 </html>
