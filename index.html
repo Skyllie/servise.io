@@ -6,10 +6,7 @@
     <title>Mapa ośrodków narciarskich - 200km od Rybnika</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-    <!-- Marker cluster for better UX when many markers are nearby -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.min.js"></script>
+    <!-- Marker clustering removed per user request -->
     <style>
         * {
             margin: 0;
@@ -392,8 +389,8 @@
                 slopes: '3.5 km tras, 6 wyciągów',
                 price: '110-140 PLN',
                 priceNote: 'dzień dorosły',
-                website: 'https://pl.wikipedia.org/wiki/Sto%C5%BCek_(g%C3%B3ra)',
-                trailMap: 'https://pl.wikipedia.org/wiki/Sto%C5%BCek_(g%C3%B3ra)#Turystyka'
+                website: 'https://wisla.pl',
+                trailMap: 'https://wisla.pl'
             },
             {
                 name: 'Brenna - Narciarska',
@@ -405,8 +402,8 @@
                 slopes: '2 km tras, 4 wyciągi',
                 price: '100-120 PLN',
                 priceNote: 'dzień dorosły',
-                website: 'https://pl.wikipedia.org/wiki/Brenna',
-                trailMap: 'https://pl.wikipedia.org/wiki/Brenna#Turystyka'
+                website: 'https://www.brenna.org.pl/',
+                trailMap: 'https://turysta.brenna.org.pl/'
             },
             {
                 name: 'Zawoja - Mosorny Groń',
@@ -444,8 +441,8 @@
                 slopes: '3.2 km tras, 5 wyciągów',
                 price: '100-130 PLN',
                 priceNote: 'dzień dorosły + kolejka',
-                website: 'https://pl.wikipedia.org/wiki/Szyndzielnia',
-                trailMap: 'https://pl.wikipedia.org/wiki/Szyndzielnia#Trasy_narciarskie'
+                website: 'https://kolej-szyndzielnia.pl/',
+                trailMap: 'https://kolej-szyndzielnia.pl/kolej-gondolowa/'
             }
             ,
             {
@@ -458,8 +455,8 @@
                 slopes: 'kilka tras zjazdowych, wyciągi, nartostrady',
                 price: '100-130 PLN',
                 priceNote: 'dzień dorosły',
-                website: 'https://pl.wikipedia.org/wiki/Czantoria_Wielka',
-                trailMap: 'https://pl.wikipedia.org/wiki/Czantoria_Wielka'
+                website: 'https://wiezaczantoria.pl/',
+                trailMap: 'https://wiezaczantoria.pl/wieza/'
             },
             {
                 name: 'Zwardoń Ski',
@@ -471,8 +468,8 @@
                 slopes: 'kilka wyciągów, trasy rodzinne',
                 price: '90-120 PLN',
                 priceNote: 'dzień dorosły',
-                website: 'https://pl.wikipedia.org/wiki/Zwardo%C5%84',
-                trailMap: 'https://pl.wikipedia.org/wiki/Zwardo%C5%84#Turystyka'
+                website: 'http://www.zwardon.prv.pl/',
+                trailMap: 'https://zwardon.prv.pl/zima.html'
             },
             {
                 name: 'Wisła - Cieńków',
@@ -485,7 +482,7 @@
                 price: '100-130 PLN',
                 priceNote: 'dzień dorosły',
                 website: 'https://wisla.pl',
-                trailMap: 'https://pl.wikipedia.org/wiki/Stacja_Narciarska_Cie%C5%84k%C3%B3w_w_Wi%C5%9Ble'
+                trailMap: 'https://wisla.pl'
             },
             {
                 name: 'Jaworzyna Krynicka',
@@ -498,7 +495,7 @@
                 price: '160-200 PLN',
                 priceNote: 'dzień dorosły (kolej gondolowa osobno)',
                 website: 'https://jaworzynakrynicka.pl',
-                trailMap: 'https://pl.wikipedia.org/wiki/Jaworzyna_Krynicka'
+                trailMap: 'https://jaworzynakrynicka.pl'
             }
         ];
 
@@ -535,8 +532,8 @@
             return R * c;
         }
 
-        // Use a cluster group to keep map usable when markers overlap
-        const markersGroup = L.markerClusterGroup();
+        // Use a simple layer group for markers (clustering removed)
+        const markersGroup = L.layerGroup();
         const markerList = [];
 
         skiResorts.forEach(resort => {
@@ -627,7 +624,7 @@
                            (r.description && r.description.toLowerCase().includes(q)) ||
                            (r.slopes && r.slopes.toLowerCase().includes(q));
                 });
-                if (filtered.length) markersGroup.addLayers(filtered);
+                if (filtered.length) filtered.forEach(m => markersGroup.addLayer(m));
                 // update count to show matched count when filtering
                 if (resortCountEl) resortCountEl.textContent = q ? `🔎 ${filtered.length} wyników` : `📍 ${skiResorts.length} Ośrodków`;
             });
