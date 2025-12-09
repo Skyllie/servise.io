@@ -6,6 +6,10 @@
     <title>Mapa ośrodków narciarskich - 200km od Rybnika</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <!-- Marker cluster for better UX when many markers are nearby -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -38,6 +42,15 @@
             display: flex;
             gap: 20px;
             flex-wrap: wrap;
+        }
+        #search {
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid #dfe6e9;
+            font-size: 13px;
+            width: 260px;
+            background: white;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
         }
         .stat {
             background: #3498db;
@@ -187,8 +200,11 @@
     <div class="header">
         <h1>🎿 Ośrodki Narciarskie - 200km od Rybnika</h1>
         <p>Wszystkie najlepsze stoki w promieniu 200 km z cenami i mapami tras</p>
+        <div style="margin:8px 0">
+            <input id="search" placeholder="Szukaj ośrodka (np. Szczyrk)" aria-label="Szukaj ośrodka" />
+        </div>
         <div class="stats">
-            <div class="stat">📍 15 Ośrodków</div>
+            <div class="stat" id="resort-count">📍 ... Ośrodków</div>
             <div class="stat">⛷️ 250+ km tras</div>
             <div class="stat">🎫 Ceny od 100 PLN</div>
         </div>
@@ -215,6 +231,9 @@
     </div>
 
     <script>
+        /* Resort count and distances are updated after markers are created
+           (we build markers later so we update the UI once everything is ready) */
+
         const rybnikCoords = [50.0971, 18.5463];
         const map = L.map('map').setView([49.8, 19.2], 9);
 
@@ -244,7 +263,7 @@
                 price: '180-220 PLN',
                 priceNote: 'dzień dorosły (ceny dynamiczne)',
                 website: 'https://www.szczyrkowski.pl',
-                trailMap: 'https://www.szczyrkowski.pl/mapa-stoków'
+                trailMap: 'https://www.szczyrkowski.pl'
             },
             {
                 name: 'Kasprowy Wierch',
@@ -283,7 +302,7 @@
                 price: '150-180 PLN',
                 priceNote: 'dzień dorosły',
                 website: 'https://szymoszkowa.pl',
-                trailMap: 'https://szymoszkowa.pl/mapa'
+                trailMap: 'https://szymoszkowa.pl/trasy-narciarskie-zakopane/'
             },
             {
                 name: 'Harenda - Zakopane',
@@ -296,7 +315,7 @@
                 price: '140-170 PLN',
                 priceNote: 'dzień dorosły',
                 website: 'https://www.harendazakopane.pl',
-                trailMap: 'https://www.harendazakopane.pl/mapa-tras'
+                trailMap: 'https://www.harendazakopane.pl/'
             },
             {
                 name: 'Gubałówka',
@@ -335,7 +354,7 @@
                 price: '140-180 PLN',
                 priceNote: 'dzień dorosły (ceny dynamiczne)',
                 website: 'https://zieleniec.pl',
-                trailMap: 'https://zieleniec.pl/mapa-tras'
+                trailMap: 'https://zieleniec.pl/zima/mapa'
             },
             {
                 name: 'Czarna Góra Resort',
@@ -348,7 +367,7 @@
                 price: '140-170 PLN',
                 priceNote: 'dzień dorosły (7h)',
                 website: 'https://czarnagora.pl',
-                trailMap: 'https://czarnagora.pl/mapa-stoków'
+                trailMap: 'https://czarnagora.pl/mapa-zimowa/'
             },
             {
                 name: 'Pilsko - Korbielów',
@@ -361,7 +380,7 @@
                 price: '130-150 PLN',
                 priceNote: 'dzień dorosły',
                 website: 'https://pilsko.com.pl',
-                trailMap: 'https://pilsko.com.pl/mapa'
+                trailMap: 'https://korbielow.net/pilsko-trasy-wyciagi/'
             },
             {
                 name: 'Wisła - Stożek',
@@ -373,8 +392,8 @@
                 slopes: '3.5 km tras, 6 wyciągów',
                 price: '110-140 PLN',
                 priceNote: 'dzień dorosły',
-                website: 'https://stozekkpr.pl',
-                trailMap: 'https://stozekkpr.pl/mapa-tras'
+                website: 'https://pl.wikipedia.org/wiki/Sto%C5%BCek_(g%C3%B3ra)',
+                trailMap: 'https://pl.wikipedia.org/wiki/Sto%C5%BCek_(g%C3%B3ra)#Turystyka'
             },
             {
                 name: 'Brenna - Narciarska',
@@ -386,8 +405,8 @@
                 slopes: '2 km tras, 4 wyciągi',
                 price: '100-120 PLN',
                 priceNote: 'dzień dorosły',
-                website: 'https://brennanarciarska.pl',
-                trailMap: 'https://brennanarciarska.pl/mapa'
+                website: 'https://pl.wikipedia.org/wiki/Brenna',
+                trailMap: 'https://pl.wikipedia.org/wiki/Brenna#Turystyka'
             },
             {
                 name: 'Zawoja - Mosorny Groń',
@@ -412,8 +431,8 @@
                 slopes: '1.5 km tras, 3 wyciągi',
                 price: '80-100 PLN',
                 priceNote: 'dzień dorosły',
-                website: 'https://rachowiec.com.pl',
-                trailMap: 'https://rachowiec.com.pl/mapa'
+                website: 'https://korbielow.net',
+                trailMap: 'https://korbielow.net/pilsko-trasy-wyciagi/'
             },
             {
                 name: 'Szyndzielnia - Bielsko',
@@ -425,8 +444,61 @@
                 slopes: '3.2 km tras, 5 wyciągów',
                 price: '100-130 PLN',
                 priceNote: 'dzień dorosły + kolejka',
-                website: 'https://szyndzielnia.pl',
-                trailMap: 'https://szyndzielnia.pl/mapa-stoków'
+                website: 'https://pl.wikipedia.org/wiki/Szyndzielnia',
+                trailMap: 'https://pl.wikipedia.org/wiki/Szyndzielnia#Trasy_narciarskie'
+            }
+            ,
+            {
+                name: 'Ustroń - Czantoria',
+                lat: 49.678611,
+                lng: 18.804444,
+                level: 'all-levels',
+                distance: 51,
+                description: 'Popularny ośrodek z kolejką krzesełkową, wieżą widokową i trasami dla rodzin.',
+                slopes: 'kilka tras zjazdowych, wyciągi, nartostrady',
+                price: '100-130 PLN',
+                priceNote: 'dzień dorosły',
+                website: 'https://pl.wikipedia.org/wiki/Czantoria_Wielka',
+                trailMap: 'https://pl.wikipedia.org/wiki/Czantoria_Wielka'
+            },
+            {
+                name: 'Zwardoń Ski',
+                lat: 49.5038889,
+                lng: 18.9758333,
+                level: 'intermediate',
+                distance: 73,
+                description: 'Tradycyjna stacja narciarska w Beskidzie Żywieckim — kilka wyciągów i trasy rodzinne.',
+                slopes: 'kilka wyciągów, trasy rodzinne',
+                price: '90-120 PLN',
+                priceNote: 'dzień dorosły',
+                website: 'https://pl.wikipedia.org/wiki/Zwardo%C5%84',
+                trailMap: 'https://pl.wikipedia.org/wiki/Zwardo%C5%84#Turystyka'
+            },
+            {
+                name: 'Wisła - Cieńków',
+                lat: 49.654167,
+                lng: 18.860833,
+                level: 'intermediate',
+                distance: 54,
+                description: 'Stacja narciarska w obrębie Wisły — wygodne dojazdy, trasy dla rodzin.',
+                slopes: 'kilka tras, wyciągi talerzykowe',
+                price: '100-130 PLN',
+                priceNote: 'dzień dorosły',
+                website: 'https://wisla.pl',
+                trailMap: 'https://pl.wikipedia.org/wiki/Stacja_Narciarska_Cie%C5%84k%C3%B3w_w_Wi%C5%9Ble'
+            },
+            {
+                name: 'Jaworzyna Krynicka',
+                lat: 49.4179444,
+                lng: 20.8955,
+                level: 'all-levels',
+                distance: 186,
+                description: 'Duży ośrodek w Beskidzie Sądeckim z gondolą i rozbudowaną infrastrukturą narciarską.',
+                slopes: 'ok. 14 km tras, kolej gondolowa, kilka wyciągów',
+                price: '160-200 PLN',
+                priceNote: 'dzień dorosły (kolej gondolowa osobno)',
+                website: 'https://jaworzynakrynicka.pl',
+                trailMap: 'https://pl.wikipedia.org/wiki/Jaworzyna_Krynicka'
             }
         ];
 
@@ -450,9 +522,26 @@
             return `<span class="level ${level}">${labels[level]}</span>`;
         }
 
+        // Utility: haversine distance in km
+        function haversineKm(lat1, lon1, lat2, lon2) {
+            const toRad = x => x * Math.PI / 180;
+            const R = 6371; // km
+            const dLat = toRad(lat2 - lat1);
+            const dLon = toRad(lon2 - lon1);
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+                      Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        // Use a cluster group to keep map usable when markers overlap
+        const markersGroup = L.markerClusterGroup();
+        const markerList = [];
+
         skiResorts.forEach(resort => {
             const color = getMarkerColor(resort.level);
-            
+
             const customIcon = L.divIcon({
                 className: 'custom-marker',
                 html: `<div style="
@@ -467,52 +556,82 @@
                 iconAnchor: [14, 14]
             });
 
+            const distKm = Math.round(haversineKm(rybnikCoords[0], rybnikCoords[1], resort.lat, resort.lng));
+            // prepare buttons with safe attributes and accessibility
+            const websiteBtn = (resort.website && String(resort.website).startsWith('http'))
+                ? `<a href="${resort.website}" target="_blank" rel="noopener noreferrer" class="website-btn" aria-label="Otwórz oficjalną stronę ${resort.name}">🌐 Strona</a>`
+                : `<a href="#" class="website-btn" aria-disabled="true" style="opacity:.6;pointer-events:none;">🌐 Strona</a>`;
+
+            const mapBtn = (resort.trailMap && String(resort.trailMap).startsWith('http'))
+                ? `<a href="${resort.trailMap}" target="_blank" rel="noopener noreferrer" class="map-btn" aria-label="Mapa tras ${resort.name}">🗺️ Mapa tras</a>`
+                : `<a href="#" class="map-btn" aria-disabled="true" style="opacity:.6;pointer-events:none;">🗺️ Mapa tras</a>`;
+
             const popupContent = `
                 <div class="popup-content">
                     <h3>⛷️ ${resort.name}</h3>
                     ${getLevelBadge(resort.level)}
-                    <div class="distance">📍 ${resort.distance} km od Rybnika</div>
-                    
+                    <div class="distance">📍 ${distKm} km od Rybnika</div>
                     <div class="info-row">
                         <strong>📏 Trasy:</strong> ${resort.slopes}
                     </div>
-                    
                     <div class="price-box">
                         <div class="price">💰 ${resort.price}</div>
                         <div class="price-label">${resort.priceNote}</div>
                     </div>
-                    
                     <p style="font-size:12px;color:#555;margin:8px 0;">${resort.description}</p>
-                    
                     <div class="btn-group">
-                        <a href="${resort.website}" target="_blank" class="website-btn">
-                            🌐 Strona
-                        </a>
-                        <a href="${resort.trailMap}" target="_blank" class="map-btn">
-                            🗺️ Mapa tras
-                        </a>
+                        ${websiteBtn}
+                        ${mapBtn}
                     </div>
                 </div>
             `;
 
-            L.marker([resort.lat, resort.lng], { icon: customIcon })
-                .addTo(map)
-                .bindPopup(popupContent, {
-                    maxWidth: 320,
-                    className: 'custom-popup'
-                });
+            const marker = L.marker([resort.lat, resort.lng], { icon: customIcon });
+            marker.bindPopup(popupContent, { maxWidth: 320, className: 'custom-popup' });
+            marker.resort = resort; // attach data for filtering
+            marker.resort._distanceKm = distKm;
+            markerList.push(marker);
+            markersGroup.addLayer(marker);
         });
 
+        // Add the cluster group to the map
+        map.addLayer(markersGroup);
+
+        // Draw the 200 km circle around Rybnik
         const circle = L.circle(rybnikCoords, {
             color: '#e74c3c',
             fillColor: '#e74c3c',
-            fillOpacity: 0.1,
+            fillOpacity: 0.08,
             radius: 200000
         }).addTo(map);
 
+        // Fit bounds to markers + Rybnik
         const allPoints = [...skiResorts.map(r => [r.lat, r.lng]), rybnikCoords];
         const bounds = L.latLngBounds(allPoints);
-        map.fitBounds(bounds, { padding: [30, 30] });
+        map.fitBounds(bounds.pad(0.08), { padding: [30, 30] });
+
+        // Update resort count now that markers are built
+        const resortCountEl = document.getElementById('resort-count');
+        if (resortCountEl) resortCountEl.textContent = `📍 ${skiResorts.length} Ośrodków`;
+
+        // Search / filter implementation
+        const searchEl = document.getElementById('search');
+        if (searchEl) {
+            searchEl.addEventListener('input', function(e) {
+                const q = String(e.target.value || '').trim().toLowerCase();
+                markersGroup.clearLayers();
+                const filtered = markerList.filter(m => {
+                    if (!q) return true;
+                    const r = m.resort;
+                    return (r.name && r.name.toLowerCase().includes(q)) ||
+                           (r.description && r.description.toLowerCase().includes(q)) ||
+                           (r.slopes && r.slopes.toLowerCase().includes(q));
+                });
+                if (filtered.length) markersGroup.addLayers(filtered);
+                // update count to show matched count when filtering
+                if (resortCountEl) resortCountEl.textContent = q ? `🔎 ${filtered.length} wyników` : `📍 ${skiResorts.length} Ośrodków`;
+            });
+        }
     </script>
 </body>
 </html>
