@@ -3,632 +3,794 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mapa ośrodków narciarskich - 200km od Rybnika</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-    <!-- Marker clustering removed per user request -->
+    <title>🇩🇪 Nauka słów niemieckich</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
+            min-height: 100vh;
+            padding: 20px;
         }
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 15px 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
         }
-        .header h1 {
-            color: #2c3e50;
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-        .header p {
-            color: #7f8c8d;
-            font-size: 13px;
-        }
-        .stats {
-            margin-top: 8px;
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        #search {
-            padding: 8px 10px;
-            border-radius: 8px;
-            border: 1px solid #dfe6e9;
-            font-size: 13px;
-            width: 260px;
-            background: white;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-        }
-        .stat {
-            background: #3498db;
-            color: white;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        #map {
-            flex: 1;
-            width: 100%;
-        }
-        .leaflet-popup-content-wrapper {
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            max-width: 320px;
-        }
-        .popup-content {
-            padding: 5px;
-        }
-        .popup-content h3 {
-            color: #2c3e50;
-            margin: 0 0 8px 0;
-            font-size: 18px;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 5px;
-        }
-        .popup-content .info-row {
-            margin: 8px 0;
-            font-size: 13px;
-            line-height: 1.5;
-        }
-        .popup-content .info-row strong {
-            color: #2c3e50;
-            display: inline-block;
-            min-width: 80px;
-        }
-        .popup-content .level {
-            display: inline-block;
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            margin: 3px 2px;
-            color: white;
-            font-weight: 600;
-        }
-        .beginner { background: #27ae60; }
-        .intermediate { background: #3498db; }
-        .advanced { background: #e74c3c; }
-        .all-levels { background: #9b59b6; }
-        .price-box {
-            background: #f8f9fa;
-            padding: 8px;
-            border-radius: 8px;
-            margin: 8px 0;
-            border-left: 4px solid #27ae60;
-        }
-        .price-box .price {
-            font-size: 16px;
-            font-weight: bold;
-            color: #27ae60;
-        }
-        .price-box .price-label {
-            font-size: 11px;
-            color: #7f8c8d;
-        }
-        .distance {
-            background: #ecf0f1;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 11px;
-            color: #34495e;
-            display: inline-block;
-            margin-top: 5px;
-        }
-        .btn-group {
-            display: flex;
-            gap: 5px;
-            margin-top: 10px;
-        }
-        .website-btn, .map-btn {
-            flex: 1;
-            display: inline-block;
-            padding: 8px 12px;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-size: 12px;
+
+        h1 {
             text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
             transition: all 0.3s;
             font-weight: 600;
         }
-        .website-btn {
-            background: #3498db;
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
         }
-        .website-btn:hover {
-            background: #2980b9;
+
+        .btn-primary:hover {
+            background: #5568d3;
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
         }
-        .map-btn {
-            background: #e74c3c;
+
+        .btn-secondary {
+            background: #48bb78;
+            color: white;
         }
-        .map-btn:hover {
-            background: #c0392b;
-            transform: translateY(-2px);
+
+        .btn-secondary:hover {
+            background: #38a169;
         }
-        .legend {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            z-index: 1000;
-            max-width: 200px;
+
+        .btn-danger {
+            background: #f56565;
+            color: white;
+            padding: 8px 12px;
         }
-        .legend h4 {
-            margin: 0 0 10px 0;
-            font-size: 14px;
-            color: #2c3e50;
+
+        .btn-danger:hover {
+            background: #e53e3e;
         }
-        .legend-item {
+
+        .btn-outline {
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .word-item {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            margin: 5px 0;
-            font-size: 11px;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #e2e8f0;
         }
-        .legend-icon {
-            width: 18px;
-            height: 18px;
-            margin-right: 8px;
-            border-radius: 50%;
-            border: 2px solid white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+
+        .word-item:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
+
+        .word-text {
+            font-size: 18px;
+        }
+
+        .word-german {
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .word-polish {
+            color: #4a5568;
+        }
+
+        .stats {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .success-rate {
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+        }
+
+        .rate-high { background: #c6f6d5; color: #22543d; }
+        .rate-medium { background: #fef3c7; color: #78350f; }
+        .rate-low { background: #fed7d7; color: #742a2a; }
+
+        .flashcard {
+            height: 400px;
+            perspective: 1000px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            padding: 40px;
+        }
+
+        .flashcard-front {
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .flashcard-back {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: rotateY(180deg);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .flashcard-word {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .flashcard-label {
+            font-size: 1em;
+            opacity: 0.7;
+            margin-bottom: 10px;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 15px;
+        }
+
+        .navigation button {
+            flex: 1;
+        }
+
+        .mode-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .mode-buttons button {
+            padding: 20px;
+            font-size: 18px;
+        }
+
+        .quiz-card {
+            text-align: center;
+        }
+
+        .question {
+            background: #f7fafc;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .question-lang {
+            font-size: 1.2em;
+            color: #718096;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            font-size: 3em;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .result {
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .result.correct {
+            background: #c6f6d5;
+            border: 2px solid #48bb78;
+        }
+
+        .result.wrong {
+            background: #fed7d7;
+            border: 2px solid #f56565;
+        }
+
+        .result-title {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .result.correct .result-title { color: #22543d; }
+        .result.wrong .result-title { color: #742a2a; }
+
+        .hidden {
+            display: none;
+        }
+
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .unknown-badge {
+            background: #fed7aa;
+            color: #7c2d12;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .unknown-section {
+            border: 2px solid #fb923c;
+        }
+
         @media (max-width: 768px) {
-            .header h1 { font-size: 18px; }
-            .stats { gap: 10px; }
-            .stat { font-size: 11px; padding: 4px 10px; }
-            .legend { bottom: 10px; right: 10px; padding: 10px; }
+            h1 {
+                font-size: 2em;
+            }
+            
+            .flashcard-word {
+                font-size: 2em;
+            }
+            
+            .question-text {
+                font-size: 2em;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>🎿 Ośrodki Narciarskie - 200km od Rybnika</h1>
-        <p>Wszystkie najlepsze stoki w promieniu 200 km z cenami i mapami tras</p>
-        <div style="margin:8px 0">
-            <input id="search" placeholder="Szukaj ośrodka (np. Szczyrk)" aria-label="Szukaj ośrodka" />
+    <div class="container">
+        <h1>🇩🇪 Nauka słów niemieckich</h1>
+
+        <!-- Dodawanie słów -->
+        <div id="addMode" class="card">
+            <h2 style="margin-bottom: 20px; color: #2d3748;">Dodaj nowe słowo</h2>
+            <div class="input-group">
+                <input type="text" id="germanInput" placeholder="Słowo niemieckie">
+                <input type="text" id="polishInput" placeholder="Tłumaczenie polskie">
+                <button class="btn-primary" onclick="addWord()">➕ Dodaj</button>
+            </div>
         </div>
-        <div class="stats">
-            <div class="stat" id="resort-count">📍 ... Ośrodków</div>
-            <div class="stat">⛷️ 250+ km tras</div>
-            <div class="stat">🎫 Ceny od 100 PLN</div>
+
+        <!-- Lista nieznanych słów -->
+        <div id="unknownSection" class="card unknown-section hidden">
+            <h2 style="color: #c2410c; margin-bottom: 15px;">❓ Nie znam (<span id="unknownCount">0</span>)</h2>
+            <div id="unknownList"></div>
         </div>
-    </div>
-    <div id="map"></div>
-    <div class="legend">
-        <h4>Poziom trudności</h4>
-        <div class="legend-item">
-            <div class="legend-icon beginner"></div>
-            <span>Początkujący</span>
+
+        <!-- Lista wszystkich słów -->
+        <div id="wordListSection" class="card">
+            <h2 style="margin-bottom: 20px; color: #2d3748;">Wszystkie słowa (<span id="wordCount">0</span>)</h2>
+            <div id="wordList"></div>
         </div>
-        <div class="legend-item">
-            <div class="legend-icon intermediate"></div>
-            <span>Średniozaawans.</span>
+
+        <!-- Przyciski trybów -->
+        <div id="modeButtons" class="mode-buttons hidden">
+            <button class="btn-primary" onclick="startMode('flashcards')">📚 Fiszki</button>
+            <button class="btn-primary" onclick="startMode('quiz-de-pl')">✍️ DE → PL</button>
+            <button class="btn-secondary" onclick="startMode('quiz-pl-de')">✍️ PL → DE</button>
         </div>
-        <div class="legend-item">
-            <div class="legend-icon advanced"></div>
-            <span>Zaawansowani</span>
+
+        <!-- Fiszki -->
+        <div id="flashcardsMode" class="hidden">
+            <div class="header-nav">
+                <button class="btn-outline" onclick="backToMain()">← Powrót</button>
+                <button class="btn-outline" onclick="toggleUnknownFilter()">
+                    <span id="filterText">Wszystkie słowa</span>
+                </button>
+                <span id="flashcardCounter" style="color: white; font-weight: bold; font-size: 1.2em;"></span>
+            </div>
+            <div class="flashcard" id="flashcard" onclick="flipCard()">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <div class="flashcard-label">Polski</div>
+                        <div class="flashcard-word" id="flashcardPolish"></div>
+                        <div class="flashcard-label" style="margin-top: 20px; opacity: 0.5;">Kliknij aby odwrócić</div>
+                    </div>
+                    <div class="flashcard-back">
+                        <div class="flashcard-label">Deutsch</div>
+                        <div class="flashcard-word" id="flashcardGerman"></div>
+                        <div id="flashcardStats" style="margin-top: 20px; opacity: 0.8;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="navigation">
+                <button class="btn-outline" onclick="previousCard()">← Poprzednia</button>
+                <button class="btn-primary" onclick="nextCard()">Następna →</button>
+            </div>
         </div>
-        <div class="legend-item">
-            <div class="legend-icon all-levels"></div>
-            <span>Wszystkie poziomy</span>
+
+        <!-- Quiz -->
+        <div id="quizMode" class="hidden">
+            <div class="header-nav">
+                <button class="btn-outline" onclick="backToMain()">← Powrót</button>
+                <button class="btn-outline" onclick="toggleUnknownFilter()">
+                    <span id="filterTextQuiz">Wszystkie słowa</span>
+                </button>
+                <span id="quizCounter" style="color: white; font-weight: bold; font-size: 1.2em;"></span>
+            </div>
+            <div class="card quiz-card">
+                <div id="quizDirectionLabel" style="font-size: 1.5em; font-weight: bold; color: #667eea; margin-bottom: 20px;"></div>
+                <div class="question">
+                    <div class="question-lang" id="questionLang"></div>
+                    <div class="question-text" id="questionText"></div>
+                </div>
+                <div id="answerSection">
+                    <input type="text" id="answerInput" placeholder="Wpisz tłumaczenie..." style="width: 100%; margin-bottom: 15px; font-size: 1.2em;">
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-primary" onclick="checkAnswer()" style="flex: 1; padding: 15px; font-size: 1.1em;">Sprawdź</button>
+                        <button class="btn-outline" onclick="markUnknown()" style="padding: 15px;">❓</button>
+                    </div>
+                </div>
+                <div id="resultSection" class="hidden">
+                    <div id="resultBox" class="result"></div>
+                    <button class="btn-primary" onclick="nextQuiz()" style="width: 100%; padding: 15px; font-size: 1.1em;">Następne słowo →</button>
+                </div>
+                <div id="quizStats" style="margin-top: 20px; color: #718096;"></div>
+            </div>
         </div>
     </div>
 
     <script>
-        /* Resort count and distances are updated after markers are created
-           (we build markers later so we update the UI once everything is ready) */
+        let words = [];
+        let unknownWords = [];
+        let currentIndex = 0;
+        let currentMode = 'add';
+        let quizMode = '';
+        let isFlipped = false;
+        let showUnknownOnly = false;
 
-        const rybnikCoords = [50.0971, 18.5463];
-        const map = L.map('map').setView([49.8, 19.2], 9);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors',
-            maxZoom: 18
-        }).addTo(map);
-
-        L.marker(rybnikCoords, {
-            icon: L.divIcon({
-                className: 'custom-marker',
-                html: '<div style="background:#e74c3c;width:25px;height:25px;border-radius:50%;border:3px solid white;box-shadow:0 2px 5px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:16px;">📍</div>',
-                iconSize: [25, 25],
-                iconAnchor: [12, 12]
-            })
-        }).addTo(map).bindPopup('<b>Rybnik</b><br>Twoja lokalizacja');
-
-        const skiResorts = [
-            {
-                name: 'Szczyrk Mountain Resort',
-                lat: 49.7167,
-                lng: 19.0333,
-                level: 'all-levels',
-                distance: 65,
-                description: 'Największy ośrodek narciarski w Polsce. 37 km tras, 10 wyciągów.',
-                slopes: '37 km tras, 10 wyciągów',
-                price: '180-220 PLN',
-                priceNote: 'dzień dorosły (ceny dynamiczne)',
-                website: 'https://www.szczyrkowski.pl',
-                trailMap: 'https://www.szczyrkowski.pl'
-            },
-            {
-                name: 'Kasprowy Wierch',
-                lat: 49.2323,
-                lng: 19.9817,
-                level: 'advanced',
-                distance: 165,
-                description: 'Najwyższy ośrodek w Polsce (1987m). Trasy dla zaawansowanych narciarzy.',
-                slopes: '3.3 km tras, 4 wyciągi',
-                price: '199 PLN',
-                priceNote: 'dzień dorosły + kolejka',
-                website: 'https://www.pkl.pl/kasprowy-wierch',
-                trailMap: 'https://www.pkl.pl/kasprowy-wierch/mapa'
-            },
-            {
-                name: 'Nosal - Zakopane',
-                lat: 49.2745,
-                lng: 19.9640,
-                level: 'beginner',
-                distance: 167,
-                description: 'Idealny dla rodzin i początkujących. Sztuczne naśnieżanie.',
-                slopes: '1.2 km tras, 6 wyciągów',
-                price: '140-160 PLN',
-                priceNote: 'dzień dorosły',
-                website: 'https://nosal.pl',
-                trailMap: 'https://nosal.pl/mapa-stoków'
-            },
-            {
-                name: 'Polana Szymoszkowa',
-                lat: 49.2856,
-                lng: 19.9523,
-                level: 'intermediate',
-                distance: 170,
-                description: 'Nowoczesne wyciągi krzesełkowe. Kids Park dla dzieci.',
-                slopes: '4 km tras, 3 wyciągi',
-                price: '150-180 PLN',
-                priceNote: 'dzień dorosły',
-                website: 'https://szymoszkowa.pl',
-                trailMap: 'https://szymoszkowa.pl/trasy-narciarskie-zakopane/'
-            },
-            {
-                name: 'Harenda - Zakopane',
-                lat: 49.2923,
-                lng: 20.0012,
-                level: 'intermediate',
-                distance: 175,
-                description: 'Trasy FIS, snowpark i lodowisko. Zróżnicowane trasy.',
-                slopes: '4 km tras, 7 wyciągów',
-                price: '140-170 PLN',
-                priceNote: 'dzień dorosły',
-                website: 'https://www.harendazakopane.pl',
-                trailMap: 'https://www.harendazakopane.pl/'
-            },
-            {
-                name: 'Gubałówka',
-                lat: 49.2978,
-                lng: 19.9389,
-                level: 'beginner',
-                distance: 168,
-                description: 'Kolejka linowa z centrum. Łatwe trasy i snowpark.',
-                slopes: '0.3 km tras, 2 wyciągi',
-                price: '85-100 PLN',
-                priceNote: 'dzień + kolejka',
-                website: 'https://www.pkl.pl/gubalowka',
-                trailMap: 'https://www.pkl.pl/gubalowka/mapa'
-            },
-            {
-                name: 'Białka Tatrzańska - Kotelnica',
-                lat: 49.3997,
-                lng: 20.1117,
-                level: 'all-levels',
-                distance: 185,
-                description: '25 tras różnej trudności. Część karnetu Tatry Super Ski.',
-                slopes: '14 km tras, 21 wyciągów',
-                price: '160-190 PLN',
-                priceNote: 'dzień dorosły',
-                website: 'https://bialkatatrzanska.pl',
-                trailMap: 'https://bialkatatrzanska.pl/mapa-tras'
-            },
-            {
-                name: 'Zieleniec Ski Arena',
-                lat: 50.3258,
-                lng: 16.3519,
-                level: 'all-levels',
-                distance: 120,
-                description: 'Jeden z największych ośrodków w Polsce. 23 km tras.',
-                slopes: '23 km tras, 31 wyciągów',
-                price: '140-180 PLN',
-                priceNote: 'dzień dorosły (ceny dynamiczne)',
-                website: 'https://zieleniec.pl',
-                trailMap: 'https://zieleniec.pl/zima/mapa'
-            },
-            {
-                name: 'Czarna Góra Resort',
-                lat: 50.3000,
-                lng: 16.8333,
-                level: 'all-levels',
-                distance: 145,
-                description: 'Strefa czystego powietrza. 20 tras, jazda nocna do 22:00.',
-                slopes: '14 km tras, 13 wyciągów',
-                price: '140-170 PLN',
-                priceNote: 'dzień dorosły (7h)',
-                website: 'https://czarnagora.pl',
-                trailMap: 'https://czarnagora.pl/mapa-zimowa/'
-            },
-            {
-                name: 'Pilsko - Korbielów',
-                lat: 49.5833,
-                lng: 19.1000,
-                level: 'intermediate',
-                distance: 55,
-                description: 'Wysokogórskie trasy w Beskidach. Piękne widoki.',
-                slopes: '4.3 km tras, 5 wyciągów',
-                price: '130-150 PLN',
-                priceNote: 'dzień dorosły',
-                website: 'https://pilsko.com.pl',
-                trailMap: 'https://korbielow.net/pilsko-trasy-wyciagi/'
-            },
-            {
-                name: 'Wisła - Stożek',
-                lat: 49.6500,
-                lng: 18.8500,
-                level: 'intermediate',
-                distance: 35,
-                description: 'Ośrodek w sercu Beskidu Śląskiego. Różnorodne trasy.',
-                slopes: '3.5 km tras, 6 wyciągów',
-                price: '110-140 PLN',
-                priceNote: 'dzień dorosły',
-                website: 'https://wisla.pl',
-                trailMap: 'https://wisla.pl'
-            },
-            {
-                name: 'Brenna - Narciarska',
-                lat: 49.7167,
-                lng: 18.9000,
-                level: 'beginner',
-                distance: 50,
-                description: 'Rodzinny ośrodek. Łagodne stoki dla początkujących.',
-                slopes: '2 km tras, 4 wyciągi',
-                price: '100-120 PLN',
-                priceNote: 'dzień dorosły',
-                website: 'https://www.brenna.org.pl/',
-                trailMap: 'https://turysta.brenna.org.pl/'
-            },
-            {
-                name: 'Zawoja - Mosorny Groń',
-                lat: 49.6333,
-                lng: 19.5333,
-                level: 'intermediate',
-                distance: 95,
-                description: 'Część karnetu Tatry Super Ski. Widoki na Babią Górę.',
-                slopes: '3 km tras, 5 wyciągów',
-                price: '100-130 PLN',
-                priceNote: 'dzień dorosły',
-                website: 'https://www.pkl.pl/mosorny-gron',
-                trailMap: 'https://www.pkl.pl/mosorny-gron/mapa'
-            },
-            {
-                name: 'Korbielów - Mały Rachowiec',
-                lat: 49.5917,
-                lng: 19.0833,
-                level: 'beginner',
-                distance: 52,
-                description: 'Mniejszy, rodzinny ośrodek w Żywieckiem.',
-                slopes: '1.5 km tras, 3 wyciągi',
-                price: '80-100 PLN',
-                priceNote: 'dzień dorosły',
-                website: 'https://korbielow.net',
-                trailMap: 'https://korbielow.net/pilsko-trasy-wyciagi/'
-            },
-            {
-                name: 'Szyndzielnia - Bielsko',
-                lat: 49.8000,
-                lng: 19.0333,
-                level: 'intermediate',
-                distance: 45,
-                description: 'Najbliższy większy ośrodek od Rybnika. Kolejka linowa.',
-                slopes: '3.2 km tras, 5 wyciągów',
-                price: '100-130 PLN',
-                priceNote: 'dzień dorosły + kolejka',
-                website: 'https://kolej-szyndzielnia.pl/',
-                trailMap: 'https://kolej-szyndzielnia.pl/kolej-gondolowa/'
-            }
-            ,
-            {
-                name: 'Ustroń - Czantoria',
-                lat: 49.678611,
-                lng: 18.804444,
-                level: 'all-levels',
-                distance: 51,
-                description: 'Popularny ośrodek z kolejką krzesełkową, wieżą widokową i trasami dla rodzin.',
-                slopes: 'kilka tras zjazdowych, wyciągi, nartostrady',
-                price: '100-130 PLN',
-                priceNote: 'dzień dorosły',
-                website: 'https://wiezaczantoria.pl/',
-                trailMap: 'https://wiezaczantoria.pl/wieza/'
-            },
-            {
-                name: 'Zwardoń Ski',
-                lat: 49.5038889,
-                lng: 18.9758333,
-                level: 'intermediate',
-                distance: 73,
-                description: 'Tradycyjna stacja narciarska w Beskidzie Żywieckim — kilka wyciągów i trasy rodzinne.',
-                slopes: 'kilka wyciągów, trasy rodzinne',
-                price: '90-120 PLN',
-                priceNote: 'dzień dorosły',
-                website: 'http://www.zwardon.prv.pl/',
-                trailMap: 'https://zwardon.prv.pl/zima.html'
-            },
-            {
-                name: 'Wisła - Cieńków',
-                lat: 49.654167,
-                lng: 18.860833,
-                level: 'intermediate',
-                distance: 54,
-                description: 'Stacja narciarska w obrębie Wisły — wygodne dojazdy, trasy dla rodzin.',
-                slopes: 'kilka tras, wyciągi talerzykowe',
-                price: '100-130 PLN',
-                priceNote: 'dzień dorosły',
-                website: 'https://wisla.pl',
-                trailMap: 'https://wisla.pl'
-            },
-            {
-                name: 'Jaworzyna Krynicka',
-                lat: 49.4179444,
-                lng: 20.8955,
-                level: 'all-levels',
-                distance: 186,
-                description: 'Duży ośrodek w Beskidzie Sądeckim z gondolą i rozbudowaną infrastrukturą narciarską.',
-                slopes: 'ok. 14 km tras, kolej gondolowa, kilka wyciągów',
-                price: '160-200 PLN',
-                priceNote: 'dzień dorosły (kolej gondolowa osobno)',
-                website: 'https://jaworzynakrynicka.pl',
-                trailMap: 'https://jaworzynakrynicka.pl'
-            }
+        // Początkowe słowa
+        const initialWords = [
+            { german: 'hingehen', polish: 'pójść' },
+            { german: 'Gespräch', polish: 'rozmowa' },
+            { german: 'der Blick', polish: 'widok' },
+            { german: 'Weltall', polish: 'wszechświat' },
+            { german: 'riesigen', polish: 'olbrzymi' },
+            { german: 'Mülldeponien', polish: 'wysypisko śmieci' },
+            { german: 'erkennen', polish: 'rozpoznać' },
+            { german: 'Altkleider', polish: 'stare ubrania' },
+            { german: 'Sperrmüll', polish: 'odpady wielkogabarytowe' },
+            { german: 'Menge', polish: 'ilość' },
+            { german: 'erzeugen', polish: 'wytwarzać' },
+            { german: 'Kohle', polish: 'węgiel' },
+            { german: 'Fahrzeug', polish: 'pojazd' },
+            { german: 'Kohlendioxid', polish: 'dwutlenek węgla' },
+            { german: 'verbrauchen', polish: 'zużywać' },
+            { german: 'Trinkwasser', polish: 'woda pitna' },
+            { german: 'benötigen', polish: 'potrzebować' },
+            { german: 'Geräte', polish: 'urządzenia' },
+            { german: 'die Zucht', polish: 'hodowla' },
+            { german: 'der Rinder', polish: 'bydło' },
+            { german: 'atmen', polish: 'oddychać' },
+            { german: 'Treibhausgas', polish: 'gaz cieplarniany' },
+            { german: 'auf dem Weg', polish: 'na drodze' },
+            { german: 'beuten', polish: 'wykorzystywać' },
+            { german: 'Umwelt', polish: 'środowisko' },
+            { german: 'ändern', polish: 'zmieniać' },
+            { german: 'retten', polish: 'ratować' },
+            { german: 'der Wald', polish: 'las' },
+            { german: 'das Meer', polish: 'morze' },
+            { german: 'die Atmosphäre', polish: 'atmosfera' },
+            { german: 'Kraftwerk', polish: 'elektrownia' },
+            { german: 'ausatmen', polish: 'wydychać' },
+            { german: 'ausbeuten', polish: 'wykorzystywać' },
+            { german: 'Müll produzieren', polish: 'produkcja śmieci' },
+            { german: 'die Wälder zerstören', polish: 'niszczyć lasy' },
+            { german: 'Energie in Atom und Kohlenkraftwerken erzeugen', polish: 'wytwarzać energię w elektrowniach atomowych i węglowych' },
+            { german: 'heizen', polish: 'ogrzewać węgliem' },
+            { german: 'blasen', polish: 'wydmuchiwać' },
+            { german: 'zerstören', polish: 'niszczyć' },
+            { german: 'die Ursache', polish: 'przyczyna' },
+            { german: 'die Folge', polish: 'skutek, następstwo' },
+            { german: 'bequem', polish: 'wygodny' },
+            { german: 'hungern', polish: 'głodować' },
+            { german: 'dursten', polish: 'pragnienie' },
+            { german: 'Nordpol', polish: 'biegun północny' },
+            { german: 'aussterben', polish: 'wymierać' },
+            { german: 'Tiere', polish: 'zwierzęta' },
+            { german: 'verdorren', polish: 'usychać' },
+            { german: 'Wohlstand', polish: 'dobrobyt' },
+            { german: 'Umweltschutz', polish: 'ochrona środowiska' },
+            { german: 'umweltfreundlich', polish: 'przyjazny dla środowiska' },
+            { german: 'umweltfeindlich', polish: 'szkodliwy dla środowiska' },
+            { german: 'Klimawandel', polish: 'zmiana klimatu' },
+            { german: 'Umweltverschmutzung', polish: 'zanieczyszczenie środowiska' }
         ];
 
-        function getMarkerColor(level) {
-            switch(level) {
-                case 'beginner': return '#27ae60';
-                case 'intermediate': return '#3498db';
-                case 'advanced': return '#e74c3c';
-                case 'all-levels': return '#9b59b6';
-                default: return '#95a5a6';
+        // Загрузка данных
+        function loadData() {
+            const savedWords = localStorage.getItem('germanWords');
+            const savedUnknown = localStorage.getItem('unknownWords');
+            
+            if (savedWords) {
+                words = JSON.parse(savedWords);
+            } else {
+                // Если нет сохраненных слов, загружаем начальные
+                words = initialWords.map((word, index) => ({
+                    id: Date.now() + index,
+                    german: word.german,
+                    polish: word.polish,
+                    correct: 0,
+                    wrong: 0
+                }));
+                saveData();
+            }
+            
+            if (savedUnknown) unknownWords = JSON.parse(savedUnknown);
+            
+            updateDisplay();
+        }
+
+        function saveData() {
+            localStorage.setItem('germanWords', JSON.stringify(words));
+            localStorage.setItem('unknownWords', JSON.stringify(unknownWords));
+        }
+
+        function addWord() {
+            const german = document.getElementById('germanInput').value.trim();
+            const polish = document.getElementById('polishInput').value.trim();
+            
+            if (german && polish) {
+                words.push({
+                    id: Date.now(),
+                    german: german,
+                    polish: polish,
+                    correct: 0,
+                    wrong: 0
+                });
+                
+                document.getElementById('germanInput').value = '';
+                document.getElementById('polishInput').value = '';
+                
+                saveData();
+                updateDisplay();
             }
         }
 
-        function getLevelBadge(level) {
-            const labels = {
-                'beginner': 'Początkujący',
-                'intermediate': 'Średniozaawansowani',
-                'advanced': 'Zaawansowani',
-                'all-levels': 'Wszystkie poziomy'
-            };
-            return `<span class="level ${level}">${labels[level]}</span>`;
+        function deleteWord(id) {
+            words = words.filter(w => w.id !== id);
+            unknownWords = unknownWords.filter(uid => uid !== id);
+            saveData();
+            updateDisplay();
         }
 
-        // Utility: haversine distance in km
-        function haversineKm(lat1, lon1, lat2, lon2) {
-            const toRad = x => x * Math.PI / 180;
-            const R = 6371; // km
-            const dLat = toRad(lat2 - lat1);
-            const dLon = toRad(lon2 - lon1);
-            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-                      Math.sin(dLon/2) * Math.sin(dLon/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            return R * c;
+        function toggleUnknownFilter() {
+            showUnknownOnly = !showUnknownOnly;
+            currentIndex = 0;
+            
+            const filterText = document.getElementById('filterText');
+            const filterTextQuiz = document.getElementById('filterTextQuiz');
+            const text = showUnknownOnly ? 'Tylko nie znam' : 'Wszystkie słowa';
+            
+            if (filterText) filterText.textContent = text;
+            if (filterTextQuiz) filterTextQuiz.textContent = text;
+            
+            if (currentMode === 'flashcards') {
+                showFlashcard();
+            } else if (currentMode.startsWith('quiz')) {
+                showQuizQuestion();
+            }
         }
 
-        // Use a simple layer group for markers (clustering removed)
-        const markersGroup = L.layerGroup();
-        const markerList = [];
+        function getFilteredWords() {
+            if (showUnknownOnly) {
+                return words.filter(w => unknownWords.includes(w.id));
+            }
+            return words;
+        }
 
-        skiResorts.forEach(resort => {
-            const color = getMarkerColor(resort.level);
-
-            const customIcon = L.divIcon({
-                className: 'custom-marker',
-                html: `<div style="
-                    background-color: ${color};
-                    width: 28px;
-                    height: 28px;
-                    border-radius: 50%;
-                    border: 3px solid white;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-                "></div>`,
-                iconSize: [28, 28],
-                iconAnchor: [14, 14]
+        function updateDisplay() {
+            document.getElementById('wordCount').textContent = words.length;
+            
+            // Обновление списка неизвестных
+            const unknownList = words.filter(w => unknownWords.includes(w.id));
+            document.getElementById('unknownCount').textContent = unknownList.length;
+            
+            if (unknownList.length > 0) {
+                document.getElementById('unknownSection').classList.remove('hidden');
+                document.getElementById('unknownList').innerHTML = unknownList.map(word => `
+                    <div class="word-item">
+                        <div class="word-text">
+                            <span class="word-german">${word.german}</span>
+                            <span style="color: #cbd5e0; margin: 0 10px;">→</span>
+                            <span class="word-polish">${word.polish}</span>
+                        </div>
+                        <button class="btn-secondary" style="padding: 8px 12px;" onclick="removeFromUnknown(${word.id})">✓</button>
+                    </div>
+                `).join('');
+            } else {
+                document.getElementById('unknownSection').classList.add('hidden');
+            }
+            
+            // Обновление списка всех слов
+            const sortedWords = [...words].sort((a, b) => {
+                const rateA = getSuccessRate(a);
+                const rateB = getSuccessRate(b);
+                return rateA - rateB;
             });
-
-            const distKm = Math.round(haversineKm(rybnikCoords[0], rybnikCoords[1], resort.lat, resort.lng));
-            // prepare buttons with safe attributes and accessibility
-            const websiteBtn = (resort.website && String(resort.website).startsWith('http'))
-                ? `<a href="${resort.website}" target="_blank" rel="noopener noreferrer" class="website-btn" aria-label="Otwórz oficjalną stronę ${resort.name}">🌐 Strona</a>`
-                : `<a href="#" class="website-btn" aria-disabled="true" style="opacity:.6;pointer-events:none;">🌐 Strona</a>`;
-
-            const mapBtn = (resort.trailMap && String(resort.trailMap).startsWith('http'))
-                ? `<a href="${resort.trailMap}" target="_blank" rel="noopener noreferrer" class="map-btn" aria-label="Mapa tras ${resort.name}">🗺️ Mapa tras</a>`
-                : `<a href="#" class="map-btn" aria-disabled="true" style="opacity:.6;pointer-events:none;">🗺️ Mapa tras</a>`;
-
-            const popupContent = `
-                <div class="popup-content">
-                    <h3>⛷️ ${resort.name}</h3>
-                    ${getLevelBadge(resort.level)}
-                    <div class="distance">📍 ${distKm} km od Rybnika</div>
-                    <div class="info-row">
-                        <strong>📏 Trasy:</strong> ${resort.slopes}
+            
+            document.getElementById('wordList').innerHTML = sortedWords.map(word => {
+                const rate = getSuccessRate(word);
+                const total = word.correct + word.wrong;
+                let rateClass = 'rate-low';
+                if (rate >= 70) rateClass = 'rate-high';
+                else if (rate >= 40) rateClass = 'rate-medium';
+                
+                return `
+                    <div class="word-item">
+                        <div class="word-text">
+                            <span class="word-german">${word.german}</span>
+                            <span style="color: #cbd5e0; margin: 0 10px;">→</span>
+                            <span class="word-polish">${word.polish}</span>
+                            ${unknownWords.includes(word.id) ? '<span class="unknown-badge">Nie znam</span>' : ''}
+                        </div>
+                        <div class="stats">
+                            <span class="success-rate ${rateClass}">
+                                ${total > 0 ? rate + '%' : 'Nowe'}
+                            </span>
+                            <button class="btn-danger" onclick="deleteWord(${word.id})">🗑️</button>
+                        </div>
                     </div>
-                    <div class="price-box">
-                        <div class="price">💰 ${resort.price}</div>
-                        <div class="price-label">${resort.priceNote}</div>
+                `;
+            }).join('');
+            
+            // Показ кнопок режимов
+            if (words.length > 0) {
+                document.getElementById('modeButtons').classList.remove('hidden');
+            } else {
+                document.getElementById('modeButtons').classList.add('hidden');
+            }
+        }
+
+        function getSuccessRate(word) {
+            const total = word.correct + word.wrong;
+            return total > 0 ? Math.round((word.correct / total) * 100) : 0;
+        }
+
+        function removeFromUnknown(id) {
+            unknownWords = unknownWords.filter(uid => uid !== id);
+            saveData();
+            updateDisplay();
+        }
+
+        function markUnknown() {
+            const filtered = getFilteredWords();
+            const current = filtered[currentIndex];
+            
+            if (!unknownWords.includes(current.id)) {
+                unknownWords.push(current.id);
+                saveData();
+            }
+            
+            nextQuiz();
+        }
+
+        function startMode(mode) {
+            currentMode = mode;
+            currentIndex = 0;
+            isFlipped = false;
+            showUnknownOnly = false;
+            
+            document.getElementById('addMode').classList.add('hidden');
+            document.getElementById('wordListSection').classList.add('hidden');
+            document.getElementById('unknownSection').classList.add('hidden');
+            document.getElementById('modeButtons').classList.add('hidden');
+            
+            if (mode === 'flashcards') {
+                document.getElementById('flashcardsMode').classList.remove('hidden');
+                showFlashcard();
+            } else if (mode.startsWith('quiz')) {
+                quizMode = mode;
+                document.getElementById('quizMode').classList.remove('hidden');
+                
+                const label = mode === 'quiz-de-pl' ? '🇩🇪 DE → 🇵🇱 PL' : '🇵🇱 PL → 🇩🇪 DE';
+                document.getElementById('quizDirectionLabel').textContent = label;
+                
+                showQuizQuestion();
+            }
+        }
+
+        function backToMain() {
+            currentMode = 'add';
+            showUnknownOnly = false;
+            
+            document.getElementById('flashcardsMode').classList.add('hidden');
+            document.getElementById('quizMode').classList.add('hidden');
+            document.getElementById('addMode').classList.remove('hidden');
+            document.getElementById('wordListSection').classList.remove('hidden');
+            document.getElementById('modeButtons').classList.remove('hidden');
+            
+            updateDisplay();
+        }
+
+        function showFlashcard() {
+            const filtered = getFilteredWords();
+            if (filtered.length === 0) return;
+            
+            const word = filtered[currentIndex];
+            document.getElementById('flashcardPolish').textContent = word.polish;
+            document.getElementById('flashcardGerman').textContent = word.german;
+            document.getElementById('flashcardStats').textContent = `Dobrze: ${word.correct} | Źle: ${word.wrong}`;
+            document.getElementById('flashcardCounter').textContent = `${currentIndex + 1} / ${filtered.length}`;
+            
+            document.getElementById('flashcard').classList.remove('flipped');
+            isFlipped = false;
+        }
+
+        function flipCard() {
+            const card = document.getElementById('flashcard');
+            if (isFlipped) {
+                card.classList.remove('flipped');
+            } else {
+                card.classList.add('flipped');
+            }
+            isFlipped = !isFlipped;
+        }
+
+        function nextCard() {
+            const filtered = getFilteredWords();
+            currentIndex = (currentIndex + 1) % filtered.length;
+            showFlashcard();
+        }
+
+        function previousCard() {
+            const filtered = getFilteredWords();
+            currentIndex = (currentIndex - 1 + filtered.length) % filtered.length;
+            showFlashcard();
+        }
+
+        function showQuizQuestion() {
+            const filtered = getFilteredWords();
+            if (filtered.length === 0) return;
+            
+            const word = filtered[currentIndex];
+            const isDeToPl = quizMode === 'quiz-de-pl';
+            
+            document.getElementById('questionLang').textContent = isDeToPl ? 'Deutsch' : 'Polski';
+            document.getElementById('questionText').textContent = isDeToPl ? word.german : word.polish;
+            document.getElementById('quizCounter').textContent = `${currentIndex + 1} / ${filtered.length}`;
+            document.getElementById('quizStats').textContent = `Dobrze: ${word.correct} | Źle: ${word.wrong} (${getSuccessRate(word)}% sukcesu)`;
+            
+            document.getElementById('answerSection').classList.remove('hidden');
+            document.getElementById('resultSection').classList.add('hidden');
+            document.getElementById('answerInput').value = '';
+            document.getElementById('answerInput').focus();
+        }
+
+        function checkAnswer() {
+            const filtered = getFilteredWords();
+            const word = filtered[currentIndex];
+            const answer = document.getElementById('answerInput').value.trim();
+            const isDeToPl = quizMode === 'quiz-de-pl';
+            const correct = answer.toLowerCase() === (isDeToPl ? word.polish : word.german).toLowerCase();
+            
+            if (correct) {
+                word.correct++;
+            } else {
+                word.wrong++;
+            }
+            
+            saveData();
+            
+            const resultBox = document.getElementById('resultBox');
+            resultBox.className = 'result ' + (correct ? 'correct' : 'wrong');
+            resultBox.innerHTML = `
+                <div class="result-title">${correct ? '✓ Dobrze!' : '✗ Źle'}</div>
+                ${!correct ? `
+                    <div style="font-size: 1.1em; color: #4a5568;">
+                        <div>Twoja odpowiedź: <strong>${answer}</strong></div>
+                        <div>Prawidłowo: <strong style="color: #22543d;">${isDeToPl ? word.polish : word.german}</strong></div>
                     </div>
-                    <p style="font-size:12px;color:#555;margin:8px 0;">${resort.description}</p>
-                    <div class="btn-group">
-                        ${websiteBtn}
-                        ${mapBtn}
-                    </div>
-                </div>
+                ` : ''}
             `;
-
-            const marker = L.marker([resort.lat, resort.lng], { icon: customIcon });
-            marker.bindPopup(popupContent, { maxWidth: 320, className: 'custom-popup' });
-            marker.resort = resort; // attach data for filtering
-            marker.resort._distanceKm = distKm;
-            markerList.push(marker);
-            markersGroup.addLayer(marker);
-        });
-
-        // Add the cluster group to the map
-        map.addLayer(markersGroup);
-
-        // Draw the 200 km circle around Rybnik
-        const circle = L.circle(rybnikCoords, {
-            color: '#e74c3c',
-            fillColor: '#e74c3c',
-            fillOpacity: 0.08,
-            radius: 200000
-        }).addTo(map);
-
-        // Fit bounds to markers + Rybnik
-        const allPoints = [...skiResorts.map(r => [r.lat, r.lng]), rybnikCoords];
-        const bounds = L.latLngBounds(allPoints);
-        map.fitBounds(bounds.pad(0.08), { padding: [30, 30] });
-
-        // Update resort count now that markers are built
-        const resortCountEl = document.getElementById('resort-count');
-        if (resortCountEl) resortCountEl.textContent = `📍 ${skiResorts.length} Ośrodków`;
-
-        // Search / filter implementation
-        const searchEl = document.getElementById('search');
-        if (searchEl) {
-            searchEl.addEventListener('input', function(e) {
-                const q = String(e.target.value || '').trim().toLowerCase();
-                markersGroup.clearLayers();
-                const filtered = markerList.filter(m => {
-                    if (!q) return true;
-                    const r = m.resort;
-                    return (r.name && r.name.toLowerCase().includes(q)) ||
-                           (r.description && r.description.toLowerCase().includes(q)) ||
-                           (r.slopes && r.slopes.toLowerCase().includes(q));
-                });
-                if (filtered.length) filtered.forEach(m => markersGroup.addLayer(m));
-                // update count to show matched count when filtering
-                if (resortCountEl) resortCountEl.textContent = q ? `🔎 ${filtered.length} wyników` : `📍 ${skiResorts.length} Ośrodków`;
-            });
+            
+            document.getElementById('answerSection').classList.add('hidden');
+            document.getElementById('resultSection').classList.remove('hidden');
         }
+
+        function nextQuiz() {
+            const filtered = getFilteredWords();
+            currentIndex = (currentIndex + 1) % filtered.length;
+            showQuizQuestion();
+        }
+
+        // Обработка Enter
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('germanInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') addWord();
+            });
+            
+            document.getElementById('polishInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') addWord();
+            });
+            
+            document.getElementById('answerInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') checkAnswer();
+            });
+            
+            loadData();
+        });
     </script>
 </body>
 </html>
