@@ -303,6 +303,23 @@
             border: 2px solid #fb923c;
         }
 
+        .keyboard-hint {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-size: 14px;
+            color: #4a5568;
+            max-width: 300px;
+        }
+
+        .keyboard-hint strong {
+            color: #667eea;
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 2em;
@@ -314,6 +331,10 @@
             
             .question-text {
                 font-size: 2em;
+            }
+
+            .keyboard-hint {
+                display: none;
             }
         }
     </style>
@@ -365,7 +386,7 @@
                     <div class="flashcard-front">
                         <div class="flashcard-label">Polski</div>
                         <div class="flashcard-word" id="flashcardPolish"></div>
-                        <div class="flashcard-label" style="margin-top: 20px; opacity: 0.5;">Kliknij aby odwrócić</div>
+                        <div class="flashcard-label" style="margin-top: 20px; opacity: 0.5;">Kliknij lub naciśnij Enter</div>
                     </div>
                     <div class="flashcard-back">
                         <div class="flashcard-label">Deutsch</div>
@@ -377,6 +398,12 @@
             <div class="navigation">
                 <button class="btn-outline" onclick="previousCard()">← Poprzednia</button>
                 <button class="btn-primary" onclick="nextCard()">Następna →</button>
+            </div>
+            <div class="keyboard-hint">
+                <strong>Skróty klawiszowe:</strong><br>
+                <strong>Enter</strong> - odwróć fiszkę<br>
+                <strong>→ / Spacja</strong> - następna<br>
+                <strong>←</strong> - poprzednia
             </div>
         </div>
 
@@ -404,9 +431,15 @@
                 </div>
                 <div id="resultSection" class="hidden">
                     <div id="resultBox" class="result"></div>
-                    <button class="btn-primary" onclick="nextQuiz()" style="width: 100%; padding: 15px; font-size: 1.1em;">Następne słowo →</button>
+                    <button id="nextQuizBtn" class="btn-primary" onclick="nextQuiz()" style="width: 100%; padding: 15px; font-size: 1.1em;">Następne słowo →</button>
                 </div>
                 <div id="quizStats" style="margin-top: 20px; color: #718096;"></div>
+            </div>
+            <div class="keyboard-hint">
+                <strong>Skróty klawiszowe:</strong><br>
+                <strong>Enter</strong> - sprawdź / następne<br>
+                <strong>? lub /</strong> - nie znam<br>
+                <strong>→ / Spacja</strong> - następne (po wyniku)
             </div>
         </div>
     </div>
@@ -763,6 +796,9 @@
             const filtered = getFilteredWords();
             const word = filtered[currentIndex];
             const answer = document.getElementById('answerInput').value.trim();
+            
+            if (!answer) return; // Не проверяем пустой ответ
+            
             const isDeToPl = quizMode === 'quiz-de-pl';
             const correct = answer.toLowerCase() === (isDeToPl ? word.polish : word.german).toLowerCase();
             
@@ -788,6 +824,11 @@
             
             document.getElementById('answerSection').classList.add('hidden');
             document.getElementById('resultSection').classList.remove('hidden');
+            
+            // Фокус на кнопку "Następne słowo" для удобства навигации с клавиатуры
+            setTimeout(() => {
+                document.getElementById('nextQuizBtn').focus();
+            }, 100);
         }
 
         function nextQuiz() {
@@ -807,7 +848,46 @@
             });
             
             document.getElementById('answerInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') checkAnswer();
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    checkAnswer();
+                }
+            });
+
+            // Глобальная обработка клавиш
+            document.addEventListener('keydown', (e) => {
+                // Пропускаем если фокус на input поле
+                if (e.target.tagName === 'INPUT') return;
+
+                // Режим фишек
+                if (currentMode === 'flashcards' && !document.getElementById('flashcardsMode').classList.contains('hidden')) {
+                    if (e.key === 'ArrowRight' || e.key === ' ') {
+                        e.preventDefault();
+                        nextCard();
+                    } else if (e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        previousCard();
+                    } else if (e.key === 'Enter') {
+                        e.preventDefault();
+                        flipCard();
+                    }
+                }
+
+                // Режим квиза - результат показан
+                if (currentMode.startsWith('quiz') && !document.getElementById('resultSection').classList.contains('hidden')) {
+                    if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') {
+                        e.preventDefault();
+                        nextQuiz();
+                    }
+                }
+
+                // Режим квиза - кнопка "Не знаю"
+                if (currentMode.startsWith('quiz') && !document.getElementById('answerSection').classList.contains('hidden')) {
+                    if (e.key === '?' || e.key === '/') {
+                        e.preventDefault();
+                        markUnknown();
+                    }
+                }
             });
             
             loadData();
