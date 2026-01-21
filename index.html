@@ -419,6 +419,7 @@
         let quizMode = '';
         let isFlipped = false;
         let showUnknownOnly = false;
+        let shuffledWords = [];
 
         // Początkowe słowa
         const initialWords = [
@@ -539,6 +540,14 @@
             showUnknownOnly = !showUnknownOnly;
             currentIndex = 0;
             
+            // Перемешиваем заново при смене фильтра
+            if (showUnknownOnly) {
+                const unknownFiltered = words.filter(w => unknownWords.includes(w.id));
+                shuffledWords = shuffleArray(unknownFiltered);
+            } else {
+                shuffledWords = shuffleArray(words);
+            }
+            
             const filterText = document.getElementById('filterText');
             const filterTextQuiz = document.getElementById('filterTextQuiz');
             const text = showUnknownOnly ? 'Tylko nie znam' : 'Wszystkie słowa';
@@ -555,9 +564,18 @@
 
         function getFilteredWords() {
             if (showUnknownOnly) {
-                return words.filter(w => unknownWords.includes(w.id));
+                return shuffledWords.filter(w => unknownWords.includes(w.id));
             }
-            return words;
+            return shuffledWords;
+        }
+
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
         }
 
         function updateDisplay() {
@@ -651,6 +669,9 @@
             currentIndex = 0;
             isFlipped = false;
             showUnknownOnly = false;
+            
+            // Перемешиваем слова при старте режима
+            shuffledWords = shuffleArray(words);
             
             document.getElementById('addMode').classList.add('hidden');
             document.getElementById('wordListSection').classList.add('hidden');
