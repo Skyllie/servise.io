@@ -454,6 +454,9 @@
         let showUnknownOnly = false;
         let shuffledWords = [];
 
+        // Wersja słów — zmień tę liczbę za każdym razem gdy zmieniasz słowa!
+        const WORDS_VERSION = 1;
+
         // Początkowe słowa
         const initialWords = [
             { german: 'die Erde', polish: 'Ziemia' },
@@ -538,13 +541,18 @@
 
         // Загрузка данных
         function loadData() {
+            const savedVersion = localStorage.getItem('wordsVersion');
             const savedWords = localStorage.getItem('germanWords');
-            const savedUnknown = localStorage.getItem('unknownWords');
-            
-            if (savedWords) {
+
+            // Jeśli wersja się nie zgadza — czyścimy i ładujemy nowe słowa
+            if (savedWords && savedVersion === String(WORDS_VERSION)) {
                 words = JSON.parse(savedWords);
+                const savedUnknown = localStorage.getItem('unknownWords');
+                if (savedUnknown) unknownWords = JSON.parse(savedUnknown);
             } else {
-                // Если нет сохраненных слов, загружаем начальные
+                localStorage.removeItem('germanWords');
+                localStorage.removeItem('unknownWords');
+                unknownWords = [];
                 words = initialWords.map((word, index) => ({
                     id: Date.now() + index,
                     german: word.german,
@@ -554,13 +562,12 @@
                 }));
                 saveData();
             }
-            
-            if (savedUnknown) unknownWords = JSON.parse(savedUnknown);
-            
+
             updateDisplay();
         }
 
         function saveData() {
+            localStorage.setItem('wordsVersion', String(WORDS_VERSION));
             localStorage.setItem('germanWords', JSON.stringify(words));
             localStorage.setItem('unknownWords', JSON.stringify(unknownWords));
         }
