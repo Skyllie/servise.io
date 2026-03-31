@@ -4,27 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🇩🇪 Nauka słów niemieckich</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0d0d14;
-            --surface: #13131f;
-            --surface2: #1a1a2e;
-            --border: rgba(255,255,255,0.07);
-            --accent: #c9a84c;
-            --accent2: #e8c87a;
-            --accent-soft: rgba(201,168,76,0.12);
-            --text: #f0ece3;
-            --text2: #9d9aaa;
-            --text3: #6b6878;
-            --green: #4caf7d;
-            --green-soft: rgba(76,175,125,0.12);
-            --red: #e05c5c;
-            --red-soft: rgba(224,92,92,0.12);
-            --orange: #e07d3a;
-            --orange-soft: rgba(224,125,58,0.12);
+            --bg: #f5f3ee;
+            --surface: #ffffff;
+            --surface2: #f0ede7;
+            --border: #e2ddd6;
+            --accent: #2d6a4f;
+            --accent2: #40916c;
+            --accent-soft: #d8f3dc;
+            --text: #1a1a1a;
+            --text2: #5a5a5a;
+            --text3: #9a9a9a;
+            --green: #2d6a4f;
+            --green-soft: #d8f3dc;
+            --red: #c0392b;
+            --red-soft: #fdecea;
+            --orange: #d4691e;
+            --orange-soft: #fef0e6;
             --radius: 14px;
             --radius-sm: 8px;
+            --shadow: 0 2px 12px rgba(0,0,0,0.07);
+            --shadow-md: 0 4px 24px rgba(0,0,0,0.10);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -34,1263 +36,698 @@
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
-            padding: 30px 20px 60px;
+            padding: 36px 20px 80px;
         }
 
-        /* ─── Noise overlay ─── */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.5;
-        }
+        .container { max-width: 860px; margin: 0 auto; }
 
-        .container {
-            max-width: 860px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
+        .site-header { text-align: center; margin-bottom: 44px; }
+        .site-header .flag { font-size: 2.6em; display: block; margin-bottom: 10px; }
+        .site-header h1 { font-family: 'Playfair Display', serif; font-size: clamp(2em, 5vw, 3em); font-weight: 900; letter-spacing: -0.02em; }
+        .site-header h1 span { color: var(--accent); }
+        .site-header .subtitle { margin-top: 8px; color: var(--text3); font-size: 0.88em; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 500; }
 
-        /* ─── Header ─── */
-        .site-header {
-            text-align: center;
-            margin-bottom: 48px;
-            padding-top: 10px;
-        }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px; margin-bottom: 18px; box-shadow: var(--shadow); }
+        .card h2 { font-family: 'Playfair Display', serif; font-size: 1.1em; font-weight: 700; margin-bottom: 18px; }
 
-        .site-header .flag {
-            font-size: 2.4em;
-            display: block;
-            margin-bottom: 12px;
-            filter: drop-shadow(0 0 20px rgba(201,168,76,0.4));
-        }
-
-        .site-header h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2em, 5vw, 3.2em);
-            font-weight: 900;
-            letter-spacing: -0.02em;
-            color: var(--text);
-            line-height: 1.1;
-        }
-
-        .site-header h1 span {
-            color: var(--accent);
-        }
-
-        .site-header .subtitle {
-            margin-top: 10px;
-            color: var(--text3);
-            font-size: 0.95em;
-            font-weight: 300;
-            letter-spacing: 0.04em;
-        }
-
-        /* ─── Cards ─── */
-        .card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 28px;
-            margin-bottom: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent);
-        }
-
-        .card h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.1em;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 20px;
-            letter-spacing: 0.01em;
-        }
-
-        /* ─── Inputs ─── */
-        .input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
+        .input-group { display: flex; gap: 10px; margin-bottom: 14px; }
 
         input[type="text"] {
-            flex: 1;
-            padding: 13px 16px;
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            font-size: 15px;
-            color: var(--text);
-            font-family: 'DM Sans', sans-serif;
+            flex: 1; padding: 12px 15px; background: var(--surface2);
+            border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+            font-size: 15px; color: var(--text); font-family: 'DM Sans', sans-serif;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
-
         input[type="text"]::placeholder { color: var(--text3); }
+        input[type="text"]:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(45,106,79,0.1); }
 
-        input[type="text"]:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
-        }
+        button { padding: 12px 20px; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
 
-        /* ─── Buttons ─── */
-        button {
-            padding: 13px 22px;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: 'DM Sans', sans-serif;
-            letter-spacing: 0.01em;
-        }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(45,106,79,0.3); }
 
-        .btn-primary {
-            background: var(--accent);
-            color: #0d0d14;
-        }
+        .btn-secondary { background: var(--green-soft); color: var(--green); border: 1.5px solid #b7e4c7; }
+        .btn-secondary:hover { background: #c7ebd4; }
 
-        .btn-primary:hover {
-            background: var(--accent2);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 20px rgba(201,168,76,0.35);
-        }
+        .btn-danger { background: var(--red-soft); color: var(--red); border: 1.5px solid #f5c6c2; padding: 8px 12px; }
+        .btn-danger:hover { background: #fad4d1; }
 
-        .btn-secondary {
-            background: var(--green-soft);
-            color: var(--green);
-            border: 1px solid rgba(76,175,125,0.25);
-        }
+        .btn-outline { background: white; border: 1.5px solid var(--border); color: var(--text2); }
+        .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
 
-        .btn-secondary:hover {
-            background: rgba(76,175,125,0.2);
-        }
-
-        .btn-danger {
-            background: var(--red-soft);
-            color: var(--red);
-            border: 1px solid rgba(224,92,92,0.2);
-            padding: 8px 12px;
-        }
-
-        .btn-danger:hover {
-            background: rgba(224,92,92,0.22);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text2);
-        }
-
-        .btn-outline:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        /* ─── Word list ─── */
-        .word-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 13px 16px;
-            background: var(--surface2);
-            border-radius: var(--radius-sm);
-            margin-bottom: 8px;
-            border: 1px solid var(--border);
-            transition: border-color 0.2s;
-        }
-
-        .word-item:hover {
-            border-color: rgba(201,168,76,0.2);
-        }
-
+        .word-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; background: var(--surface2); border-radius: var(--radius-sm); margin-bottom: 8px; border: 1.5px solid transparent; transition: border-color 0.2s; }
+        .word-item:hover { border-color: var(--border); }
         .word-text { font-size: 15px; }
-
-        .word-german {
-            font-weight: 600;
-            color: var(--text);
-        }
-
-        .word-sep {
-            color: var(--text3);
-            margin: 0 10px;
-        }
-
+        .word-german { font-weight: 600; color: var(--text); }
+        .word-sep { color: var(--text3); margin: 0 8px; }
         .word-polish { color: var(--text2); }
-
-        .stats {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .success-rate {
-            font-weight: 600;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-        }
-
+        .stats { display: flex; gap: 8px; align-items: center; }
+        .success-rate { font-weight: 600; padding: 3px 10px; border-radius: 20px; font-size: 12px; }
         .rate-high { background: var(--green-soft); color: var(--green); }
         .rate-medium { background: var(--orange-soft); color: var(--orange); }
         .rate-low { background: var(--red-soft); color: var(--red); }
+        .unknown-badge { background: var(--orange-soft); color: var(--orange); padding: 3px 9px; border-radius: 20px; font-size: 11px; margin-left: 8px; }
 
-        .unknown-badge {
-            background: var(--orange-soft);
-            color: var(--orange);
-            padding: 3px 9px;
-            border-radius: 20px;
-            font-size: 11px;
-            margin-left: 8px;
-        }
+        .mode-buttons { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+        .mode-buttons button { padding: 16px; font-size: 14px; border-radius: var(--radius); }
+        .mode-btn-flash { background: var(--accent-soft); color: var(--accent); border: 1.5px solid #b7e4c7; }
+        .mode-btn-flash:hover { background: #c7ebd4; }
 
-        /* ─── Mode buttons ─── */
-        .mode-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
+        .flashcard { height: 360px; perspective: 1200px; cursor: pointer; margin-bottom: 18px; }
+        .flashcard-inner { position: relative; width: 100%; height: 100%; transition: transform 0.55s cubic-bezier(0.4,0,0.2,1); transform-style: preserve-3d; }
+        .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+        .flashcard-front, .flashcard-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: var(--radius); padding: 40px; }
+        .flashcard-front { background: white; border: 1.5px solid var(--border); box-shadow: var(--shadow-md); }
+        .flashcard-back { background: var(--accent); transform: rotateY(180deg); box-shadow: var(--shadow-md); }
+        .flashcard-word { font-family: 'Playfair Display', serif; font-size: clamp(2em, 5vw, 3em); font-weight: 700; margin: 14px 0; color: var(--text); text-align: center; }
+        .flashcard-back .flashcard-word { color: white; }
+        .flashcard-label { font-size: 0.75em; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+        .flashcard-back .flashcard-label { color: rgba(255,255,255,0.6); }
+        .flashcard-hint { font-size: 0.8em; color: var(--text3); margin-top: 16px; }
 
-        .mode-buttons button {
-            padding: 18px;
-            font-size: 15px;
-            border-radius: var(--radius);
-        }
+        .navigation { display: flex; gap: 12px; }
+        .navigation button { flex: 1; }
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+        .header-nav span { color: var(--accent); font-weight: 700; font-size: 1.1em; }
 
-        .mode-btn-flash {
-            background: var(--accent-soft);
-            color: var(--accent);
-            border: 1px solid rgba(201,168,76,0.2);
-        }
-
-        .mode-btn-flash:hover {
-            background: rgba(201,168,76,0.2);
-        }
-
-        /* ─── Flashcard ─── */
-        .flashcard {
-            height: 380px;
-            perspective: 1200px;
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
-
-        .flashcard-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.55s cubic-bezier(0.4,0,0.2,1);
-            transform-style: preserve-3d;
-        }
-
-        .flashcard.flipped .flashcard-inner {
-            transform: rotateY(180deg);
-        }
-
-        .flashcard-front, .flashcard-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border-radius: var(--radius);
-            padding: 40px;
-        }
-
-        .flashcard-front {
-            background: var(--surface);
-            border: 1px solid var(--border);
-        }
-
-        .flashcard-back {
-            background: var(--surface2);
-            border: 1px solid rgba(201,168,76,0.25);
-            transform: rotateY(180deg);
-        }
-
-        .flashcard-word {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2em, 6vw, 3.2em);
-            font-weight: 700;
-            margin: 16px 0;
-            color: var(--text);
-            text-align: center;
-        }
-
-        .flashcard-back .flashcard-word {
-            color: var(--accent);
-        }
-
-        .flashcard-label {
-            font-size: 0.8em;
-            color: var(--text3);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-weight: 500;
-        }
-
-        .flashcard-hint {
-            font-size: 0.8em;
-            color: var(--text3);
-            margin-top: 20px;
-        }
-
-        /* ─── Navigation ─── */
-        .navigation {
-            display: flex;
-            gap: 12px;
-        }
-
-        .navigation button {
-            flex: 1;
-        }
-
-        .header-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .header-nav span {
-            color: var(--accent);
-            font-weight: 700;
-            font-size: 1.1em;
-        }
-
-        /* ─── Quiz ─── */
         .quiz-card { text-align: center; }
-
-        .question {
-            background: var(--surface2);
-            padding: 36px;
-            border-radius: var(--radius);
-            margin-bottom: 24px;
-            border: 1px solid var(--border);
-        }
-
-        .question-lang {
-            font-size: 0.75em;
-            color: var(--text3);
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            margin-bottom: 12px;
-        }
-
-        .question-text {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(1.8em, 5vw, 3em);
-            font-weight: 700;
-            color: var(--text);
-        }
-
-        .result {
-            padding: 26px;
-            border-radius: var(--radius);
-            margin-bottom: 18px;
-        }
-
-        .result.correct {
-            background: var(--green-soft);
-            border: 1px solid rgba(76,175,125,0.3);
-        }
-
-        .result.wrong {
-            background: var(--red-soft);
-            border: 1px solid rgba(224,92,92,0.3);
-        }
-
-        .result-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8em;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-
+        .question { background: var(--surface2); padding: 34px; border-radius: var(--radius); margin-bottom: 22px; border: 1.5px solid var(--border); }
+        .question-lang { font-size: 0.72em; color: var(--text3); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 10px; font-weight: 600; }
+        .question-text { font-family: 'Playfair Display', serif; font-size: clamp(1.8em, 5vw, 2.8em); font-weight: 700; color: var(--text); }
+        .result { padding: 24px; border-radius: var(--radius); margin-bottom: 16px; }
+        .result.correct { background: var(--green-soft); border: 1.5px solid #b7e4c7; }
+        .result.wrong { background: var(--red-soft); border: 1.5px solid #f5c6c2; }
+        .result-title { font-family: 'Playfair Display', serif; font-size: 1.7em; font-weight: 700; margin-bottom: 10px; }
         .result.correct .result-title { color: var(--green); }
         .result.wrong .result-title { color: var(--red); }
 
-        /* ─── Divider ─── */
-        .divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--border), transparent);
-            margin: 40px 0;
-        }
+        /* ─── Section divider ─── */
+        .section-divider { display: flex; align-items: center; gap: 16px; margin: 50px 0 36px; }
+        .section-divider::before, .section-divider::after { content: ''; flex: 1; height: 1.5px; background: var(--border); }
+        .section-divider-label { font-size: 0.72em; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text3); white-space: nowrap; }
 
-        /* ─── Memory Tips Section ─── */
-        .tips-section {
-            margin-top: 60px;
-        }
+        /* ══════════════════════════════════════ */
+        /*   AKTYWNE PRZYPOMINANIE               */
+        /* ══════════════════════════════════════ */
+        .recall-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-md); overflow: hidden; }
 
-        .tips-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
+        .recall-header { background: var(--accent); padding: 24px 28px; display: flex; align-items: center; gap: 16px; }
+        .recall-header-icon { font-size: 2em; flex-shrink: 0; }
+        .recall-header-text h2 { font-family: 'Playfair Display', serif; font-size: 1.3em; font-weight: 700; color: white; margin-bottom: 4px; }
+        .recall-header-text p { font-size: 0.85em; color: rgba(255,255,255,0.75); line-height: 1.5; }
 
-        .tips-header .tips-label {
-            display: inline-block;
-            background: var(--accent-soft);
-            color: var(--accent);
-            border: 1px solid rgba(201,168,76,0.2);
-            border-radius: 20px;
-            padding: 5px 16px;
-            font-size: 0.8em;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            margin-bottom: 16px;
-        }
+        .recall-body { padding: 28px; }
 
-        .tips-header h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(1.6em, 4vw, 2.4em);
-            font-weight: 900;
-            letter-spacing: -0.02em;
-            color: var(--text);
-        }
+        .recall-steps { display: flex; flex-direction: column; gap: 0; }
+        .recall-step { display: flex; gap: 18px; align-items: flex-start; position: relative; }
+        .recall-step:not(:last-child)::after { content: ''; position: absolute; left: 19px; top: 40px; bottom: -12px; width: 2px; background: var(--border); }
+        .recall-step + .recall-step { margin-top: 24px; }
 
-        .tips-header p {
-            color: var(--text2);
-            margin-top: 10px;
-            font-size: 0.95em;
-            max-width: 480px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.6;
-        }
+        .step-num { width: 40px; height: 40px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-weight: 700; font-size: 0.9em; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 2px solid #b7e4c7; position: relative; z-index: 1; transition: all 0.3s; }
+        .step-num.active { background: var(--accent); color: white; border-color: var(--accent); }
+        .step-num.done { background: var(--green-soft); color: var(--green); border-color: #b7e4c7; }
 
-        .tips-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 20px;
-        }
+        .step-content { flex: 1; padding-top: 8px; }
+        .step-title { font-weight: 600; color: var(--text); font-size: 0.95em; margin-bottom: 4px; }
+        .step-desc { font-size: 0.83em; color: var(--text3); line-height: 1.5; }
 
-        .tip-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 26px;
-            position: relative;
-            overflow: hidden;
-            transition: border-color 0.25s, transform 0.25s;
-        }
+        .lbl { font-size: 0.8em; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; display: block; }
 
-        .tip-card:hover {
-            border-color: rgba(201,168,76,0.25);
-            transform: translateY(-2px);
-        }
+        textarea.recall-input { width: 100%; min-height: 130px; padding: 14px 16px; background: var(--surface2); border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--text); resize: vertical; transition: border-color 0.2s, box-shadow 0.2s; line-height: 1.6; }
+        textarea.recall-input::placeholder { color: var(--text3); }
+        textarea.recall-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(45,106,79,0.1); }
 
-        .tip-card::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 2px;
-        }
+        .recall-answer-box { background: var(--surface2); border: 1.5px dashed var(--border); border-radius: var(--radius-sm); padding: 20px; margin: 16px 0; }
+        .reveal-btn-wrap { text-align: center; padding: 10px 0; cursor: pointer; transition: background 0.2s; border-radius: var(--radius-sm); }
+        .reveal-btn-wrap:hover { background: var(--accent-soft); }
+        .reveal-btn-wrap span { font-size: 0.85em; color: var(--text3); font-weight: 500; }
 
-        .tip-card.gold::after { background: linear-gradient(90deg, var(--accent), transparent); }
-        .tip-card.green::after { background: linear-gradient(90deg, var(--green), transparent); }
-        .tip-card.blue::after { background: linear-gradient(90deg, #5b8af0, transparent); }
-        .tip-card.purple::after { background: linear-gradient(90deg, #9b6cf0, transparent); }
+        .answer-label { font-size: 0.72em; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+        .recall-answer-words { display: flex; flex-wrap: wrap; gap: 8px; }
+        .answer-word-chip { background: white; border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 6px 14px; font-size: 0.88em; }
+        .answer-word-chip .de { font-weight: 600; color: var(--text); }
+        .answer-word-chip .pl { color: var(--text3); font-size: 0.88em; margin-left: 4px; }
 
-        .tip-number {
-            font-size: 0.7em;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
+        .self-rating { margin-top: 20px; }
+        .rating-buttons { display: flex; gap: 10px; }
+        .rating-btn { flex: 1; padding: 12px 10px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; border: 1.5px solid transparent; cursor: pointer; font-family: 'DM Sans', sans-serif; text-align: center; line-height: 1.5; }
+        .rating-btn.easy { background: var(--green-soft); color: var(--green); border-color: #b7e4c7; }
+        .rating-btn.easy:hover { background: #c7ebd4; }
+        .rating-btn.hard { background: var(--orange-soft); color: var(--orange); border-color: #f5d0a9; }
+        .rating-btn.hard:hover { background: #fae0c4; }
+        .rating-btn.unknown { background: var(--red-soft); color: var(--red); border-color: #f5c6c2; }
+        .rating-btn.unknown:hover { background: #fad4d1; }
 
-        .tip-card.gold .tip-number { color: var(--accent); }
-        .tip-card.green .tip-number { color: var(--green); }
-        .tip-card.blue .tip-number { color: #5b8af0; }
-        .tip-card.purple .tip-number { color: #9b6cf0; }
+        .recall-controls { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+        .recall-controls button { flex: 1; min-width: 130px; }
 
-        .tip-icon {
-            font-size: 2em;
-            margin-bottom: 12px;
-            display: block;
-        }
+        .timer-bar-wrap { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; margin: 14px 0 4px; }
+        .timer-bar { height: 100%; background: var(--accent); border-radius: 3px; transition: width 1s linear, background 1s; }
+        .timer-text { font-size: 0.8em; color: var(--text3); font-weight: 700; text-align: right; }
 
-        .tip-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.15em;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 10px;
-        }
-
-        .tip-desc {
-            font-size: 0.88em;
-            color: var(--text2);
-            line-height: 1.65;
-        }
-
-        /* ─── Spaced repetition visual ─── */
-        .repetition-visual {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 28px;
-            margin-top: 16px;
-        }
-
-        .repetition-visual h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.05em;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 20px;
-        }
-
-        .rep-timeline {
-            display: flex;
-            align-items: center;
-            gap: 0;
-            overflow-x: auto;
-            padding-bottom: 8px;
-        }
-
-        .rep-node {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex-shrink: 0;
-        }
-
-        .rep-dot {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1em;
-            font-weight: 700;
-            font-family: 'DM Sans', sans-serif;
-            position: relative;
-            z-index: 1;
-        }
-
-        .rep-dot.now { background: var(--accent); color: #0d0d14; }
-        .rep-dot.d1 { background: rgba(201,168,76,0.6); color: var(--bg); }
-        .rep-dot.d3 { background: rgba(201,168,76,0.4); color: var(--text); }
-        .rep-dot.d7 { background: rgba(201,168,76,0.25); color: var(--text); }
-        .rep-dot.d14 { background: rgba(201,168,76,0.15); color: var(--text2); }
-
-        .rep-label {
-            margin-top: 8px;
-            font-size: 0.72em;
-            color: var(--text3);
-            text-align: center;
-            font-weight: 500;
-        }
-
-        .rep-line {
-            flex: 1;
-            height: 2px;
-            background: linear-gradient(90deg, rgba(201,168,76,0.4), rgba(201,168,76,0.1));
-            min-width: 30px;
-            max-width: 80px;
-        }
-
-        /* ─── Pro tip banner ─── */
-        .pro-tip {
-            background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.03));
-            border: 1px solid rgba(201,168,76,0.2);
-            border-radius: var(--radius);
-            padding: 22px 26px;
-            margin-top: 16px;
-            display: flex;
-            gap: 16px;
-            align-items: flex-start;
-        }
-
-        .pro-tip-icon {
-            font-size: 1.6em;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-
-        .pro-tip h4 {
-            font-weight: 700;
-            color: var(--accent);
-            margin-bottom: 6px;
-            font-size: 0.9em;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-        }
-
-        .pro-tip p {
-            font-size: 0.88em;
-            color: var(--text2);
-            line-height: 1.6;
-        }
-
-        /* ─── Keyboard hint ─── */
-        .keyboard-hint {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            padding: 14px 18px;
-            border-radius: var(--radius-sm);
-            font-size: 12px;
-            color: var(--text2);
-            max-width: 260px;
-            line-height: 1.8;
-        }
-
+        /* Keyboard hint */
+        .keyboard-hint { position: fixed; bottom: 22px; right: 22px; background: white; border: 1.5px solid var(--border); padding: 12px 16px; border-radius: var(--radius-sm); font-size: 12px; color: var(--text2); max-width: 240px; line-height: 1.8; box-shadow: var(--shadow); }
         .keyboard-hint strong { color: var(--accent); }
+        kbd { background: var(--surface2); border: 1.5px solid var(--border); border-radius: 4px; padding: 1px 5px; font-size: 10px; font-family: monospace; color: var(--text2); }
 
-        kbd {
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            padding: 1px 5px;
-            font-size: 11px;
-            font-family: monospace;
-            color: var(--accent);
-        }
-
-        /* ─── Utilities ─── */
         .hidden { display: none !important; }
-
-        .unknown-section { border-color: rgba(224,125,58,0.3) !important; }
+        .unknown-section { border-color: #f5d0a9 !important; }
         .unknown-section h2 { color: var(--orange); }
+        #quizDirectionLabel { font-size: 1.2em; font-weight: 700; color: var(--accent); margin-bottom: 16px; }
+        #quizStats { margin-top: 14px; color: var(--text3); font-size: 0.83em; }
 
-        #quizDirectionLabel {
-            font-size: 1.3em;
-            font-weight: 700;
-            color: var(--accent);
-            margin-bottom: 18px;
-        }
-
-        #quizStats {
-            margin-top: 16px;
-            color: var(--text3);
-            font-size: 0.85em;
-        }
-
-        /* ─── Scrollbar ─── */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-        /* ─── Media ─── */
-        @media (max-width: 680px) {
-            .tips-grid { grid-template-columns: 1fr; }
+        @media (max-width: 620px) {
             .mode-buttons { grid-template-columns: 1fr; }
-            .flashcard-word { font-size: 2em; }
+            .flashcard-word { font-size: 1.9em; }
             .question-text { font-size: 1.8em; }
             .keyboard-hint { display: none; }
             .input-group { flex-direction: column; }
+            .rating-buttons { flex-direction: column; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+<div class="container">
 
-        <!-- Header -->
-        <header class="site-header">
-            <span class="flag">🇩🇪</span>
-            <h1>Nauka słów <span>niemieckich</span></h1>
-            <p class="subtitle">Fiszki · Quizy · Interwałowe powtarzanie</p>
-        </header>
+    <header class="site-header">
+        <span class="flag">🇩🇪</span>
+        <h1>Nauka słów <span>niemieckich</span></h1>
+        <p class="subtitle">Fiszki · Quizy · Aktywne przypominanie</p>
+    </header>
 
-        <!-- Dodawanie słów -->
-        <div id="addMode" class="card">
-            <h2>Dodaj nowe słowo</h2>
-            <div class="input-group">
-                <input type="text" id="germanInput" placeholder="Słowo po niemiecku…">
-                <input type="text" id="polishInput" placeholder="Tłumaczenie po polsku…">
-                <button class="btn-primary" onclick="addWord()">➕ Dodaj</button>
+    <div id="addMode" class="card">
+        <h2>Dodaj nowe słowo</h2>
+        <div class="input-group">
+            <input type="text" id="germanInput" placeholder="Słowo po niemiecku…">
+            <input type="text" id="polishInput" placeholder="Tłumaczenie po polsku…">
+            <button class="btn-primary" onclick="addWord()">➕ Dodaj</button>
+        </div>
+    </div>
+
+    <div id="unknownSection" class="card unknown-section hidden">
+        <h2>❓ Nie znam (<span id="unknownCount">0</span>)</h2>
+        <div id="unknownList"></div>
+    </div>
+
+    <div id="wordListSection" class="card">
+        <h2>Wszystkie słowa (<span id="wordCount">0</span>)</h2>
+        <div id="wordList"></div>
+    </div>
+
+    <div id="modeButtons" class="mode-buttons hidden">
+        <button class="mode-btn-flash" onclick="startMode('flashcards')">📚 Fiszki</button>
+        <button class="btn-primary" onclick="startMode('quiz-de-pl')">✍️ DE → PL</button>
+        <button class="btn-secondary" onclick="startMode('quiz-pl-de')">✍️ PL → DE</button>
+    </div>
+
+    <div id="flashcardsMode" class="hidden">
+        <div class="header-nav">
+            <button class="btn-outline" onclick="backToMain()">← Powrót</button>
+            <button class="btn-outline" onclick="toggleUnknownFilter()"><span id="filterText">Wszystkie słowa</span></button>
+            <span id="flashcardCounter"></span>
+        </div>
+        <div class="flashcard" id="flashcard" onclick="flipCard()">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">
+                    <div class="flashcard-label">Polski</div>
+                    <div class="flashcard-word" id="flashcardPolish"></div>
+                    <div class="flashcard-hint">Kliknij lub naciśnij Enter</div>
+                </div>
+                <div class="flashcard-back">
+                    <div class="flashcard-label">Deutsch</div>
+                    <div class="flashcard-word" id="flashcardGerman"></div>
+                    <div id="flashcardStats" style="margin-top:14px;color:rgba(255,255,255,0.65);font-size:0.85em;"></div>
+                </div>
             </div>
         </div>
-
-        <!-- Lista nieznanych słów -->
-        <div id="unknownSection" class="card unknown-section hidden">
-            <h2>❓ Nie znam (<span id="unknownCount">0</span>)</h2>
-            <div id="unknownList"></div>
+        <div class="navigation">
+            <button class="btn-outline" onclick="previousCard()">← Poprzednia</button>
+            <button class="btn-primary" onclick="nextCard()">Następna →</button>
         </div>
-
-        <!-- Lista wszystkich słów -->
-        <div id="wordListSection" class="card">
-            <h2>Wszystkie słowa (<span id="wordCount">0</span>)</h2>
-            <div id="wordList"></div>
+        <div class="keyboard-hint">
+            <strong>Skróty:</strong><br>
+            <kbd>Enter</kbd> odwróć &nbsp;·&nbsp; <kbd>→</kbd> następna<br>
+            <kbd>←</kbd> poprzednia
         </div>
+    </div>
 
-        <!-- Przyciski trybów -->
-        <div id="modeButtons" class="mode-buttons hidden">
-            <button class="mode-btn-flash" onclick="startMode('flashcards')">📚 Fiszki</button>
-            <button class="btn-primary" onclick="startMode('quiz-de-pl')">✍️ DE → PL</button>
-            <button class="btn-secondary" onclick="startMode('quiz-pl-de')">✍️ PL → DE</button>
+    <div id="quizMode" class="hidden">
+        <div class="header-nav">
+            <button class="btn-outline" onclick="backToMain()">← Powrót</button>
+            <button class="btn-outline" onclick="toggleUnknownFilter()"><span id="filterTextQuiz">Wszystkie słowa</span></button>
+            <span id="quizCounter"></span>
         </div>
-
-        <!-- Fiszki -->
-        <div id="flashcardsMode" class="hidden">
-            <div class="header-nav">
-                <button class="btn-outline" onclick="backToMain()">← Powrót</button>
-                <button class="btn-outline" onclick="toggleUnknownFilter()">
-                    <span id="filterText">Wszystkie słowa</span>
-                </button>
-                <span id="flashcardCounter"></span>
+        <div class="card quiz-card">
+            <div id="quizDirectionLabel"></div>
+            <div class="question">
+                <div class="question-lang" id="questionLang"></div>
+                <div class="question-text" id="questionText"></div>
             </div>
-            <div class="flashcard" id="flashcard" onclick="flipCard()">
-                <div class="flashcard-inner">
-                    <div class="flashcard-front">
-                        <div class="flashcard-label">Polski</div>
-                        <div class="flashcard-word" id="flashcardPolish"></div>
-                        <div class="flashcard-hint">Kliknij lub naciśnij Enter</div>
-                    </div>
-                    <div class="flashcard-back">
-                        <div class="flashcard-label">Deutsch</div>
-                        <div class="flashcard-word" id="flashcardGerman"></div>
-                        <div id="flashcardStats" style="margin-top: 16px; color: var(--text3); font-size: 0.85em;"></div>
-                    </div>
+            <div id="answerSection">
+                <input type="text" id="answerInput" placeholder="Wpisz tłumaczenie…" style="width:100%;margin-bottom:12px;font-size:1.1em;">
+                <div style="display:flex;gap:10px;">
+                    <button class="btn-primary" onclick="checkAnswer()" style="flex:1;padding:14px;">Sprawdź</button>
+                    <button class="btn-outline" onclick="markUnknown()" style="padding:14px;">❓</button>
                 </div>
             </div>
-            <div class="navigation">
-                <button class="btn-outline" onclick="previousCard()">← Poprzednia</button>
-                <button class="btn-primary" onclick="nextCard()">Następna →</button>
+            <div id="resultSection" class="hidden">
+                <div id="resultBox" class="result"></div>
+                <button id="nextQuizBtn" class="btn-primary" onclick="nextQuiz()" style="width:100%;padding:14px;">Następne słowo →</button>
             </div>
-            <div class="keyboard-hint">
-                <strong>Skróty:</strong><br>
-                <kbd>Enter</kbd> odwróć fiszkę &nbsp;·&nbsp; <kbd>→</kbd> następna<br>
-                <kbd>←</kbd> poprzednia &nbsp;·&nbsp; <kbd>Space</kbd> następna
-            </div>
+            <div id="quizStats"></div>
         </div>
+        <div class="keyboard-hint">
+            <strong>Skróty:</strong><br>
+            <kbd>Enter</kbd> sprawdź / następne<br>
+            <kbd>?</kbd> nie znam &nbsp;·&nbsp; <kbd>→</kbd> następne
+        </div>
+    </div>
 
-        <!-- Quiz -->
-        <div id="quizMode" class="hidden">
-            <div class="header-nav">
-                <button class="btn-outline" onclick="backToMain()">← Powrót</button>
-                <button class="btn-outline" onclick="toggleUnknownFilter()">
-                    <span id="filterTextQuiz">Wszystkie słowa</span>
-                </button>
-                <span id="quizCounter"></span>
-            </div>
-            <div class="card quiz-card">
-                <div id="quizDirectionLabel"></div>
-                <div class="question">
-                    <div class="question-lang" id="questionLang"></div>
-                    <div class="question-text" id="questionText"></div>
-                </div>
-                <div id="answerSection">
-                    <input type="text" id="answerInput" placeholder="Wpisz tłumaczenie…" style="width: 100%; margin-bottom: 14px; font-size: 1.1em;">
-                    <div style="display: flex; gap: 10px;">
-                        <button class="btn-primary" onclick="checkAnswer()" style="flex: 1; padding: 14px;">Sprawdź</button>
-                        <button class="btn-outline" onclick="markUnknown()" style="padding: 14px;" title="Nie znam (?)">❓</button>
-                    </div>
-                </div>
-                <div id="resultSection" class="hidden">
-                    <div id="resultBox" class="result"></div>
-                    <button id="nextQuizBtn" class="btn-primary" onclick="nextQuiz()" style="width: 100%; padding: 14px;">Następne słowo →</button>
-                </div>
-                <div id="quizStats"></div>
-            </div>
-            <div class="keyboard-hint">
-                <strong>Skróty:</strong><br>
-                <kbd>Enter</kbd> sprawdź / następne<br>
-                <kbd>?</kbd> lub <kbd>/</kbd> nie znam<br>
-                <kbd>→</kbd> następne (po wyniku)
+    <!-- ══════════════════════════════════════════════════ -->
+    <!--   AKTYWNE PRZYPOMINANIE — INTERAKTYWNA FUNKCJA   -->
+    <!-- ══════════════════════════════════════════════════ -->
+    <div class="section-divider">
+        <span class="section-divider-label">🧠 Metoda #1 — Aktywne przypominanie</span>
+    </div>
+
+    <div class="recall-section">
+        <div class="recall-header">
+            <div class="recall-header-icon">🔄</div>
+            <div class="recall-header-text">
+                <h2>Aktywne przypominanie</h2>
+                <p>Wypisz z pamięci tyle słów ile możesz — bez podglądania. Potem sprawdź wynik. To najskuteczniejsza metoda zapamiętywania.</p>
             </div>
         </div>
+        <div class="recall-body">
 
-        <!-- ═══════════════════════════════════════════ -->
-        <!-- SEKCJA: Jak zapamiętać szybciej?           -->
-        <!-- ═══════════════════════════════════════════ -->
-        <div class="divider"></div>
-
-        <section class="tips-section">
-            <div class="tips-header">
-                <div class="tips-label">🧠 Nauka</div>
-                <h2>Jak zapamiętać szybciej?</h2>
-                <p>Sprawdzone metody zapamiętywania poparte badaniami naukowymi</p>
-            </div>
-
-            <div class="tips-grid">
-                <!-- Tip 1 -->
-                <div class="tip-card gold">
-                    <div class="tip-number">01 / Najważniejsze</div>
-                    <span class="tip-icon">🔄</span>
-                    <div class="tip-title">Aktywne przypominanie</div>
-                    <div class="tip-desc">
-                        Zamknij materiał i spróbuj odtworzyć go z pamięci — <strong style="color: var(--text);">nie czytaj ponownie</strong>. Każde samodzielne przypomnienie jest wielokrotnie skuteczniejsze niż bierne przeglądanie.
-                        <br><br>
-                        <em style="color: var(--text3);">Użyj quizu powyżej — to właśnie aktywne przypominanie!</em>
+            <!-- Kroki -->
+            <div class="recall-steps">
+                <div class="recall-step">
+                    <div class="step-num" id="sn1">1</div>
+                    <div class="step-content">
+                        <div class="step-title">Wybierz temat i ilość słów</div>
+                        <div class="step-desc">Zdecyduj które słowa chcesz przećwiczyć.</div>
                     </div>
                 </div>
-
-                <!-- Tip 2 -->
-                <div class="tip-card green">
-                    <div class="tip-number">02 / Powtarzanie</div>
-                    <span class="tip-icon">📅</span>
-                    <div class="tip-title">Interwałowe powtarzanie</div>
-                    <div class="tip-desc">
-                        Powtarzaj w narastających odstępach: po 1 godzinie, po 1 dniu, po 3 dniach, po tygodniu. Mózg utrwala tylko to, co regularnie aktywuje.
-                        <br><br>
-                        <em style="color: var(--text3);">Aplikacje jak <strong style="color: var(--text);">Anki</strong> robią to automatycznie.</em>
+                <div class="recall-step">
+                    <div class="step-num" id="sn2">2</div>
+                    <div class="step-content">
+                        <div class="step-title">Wypisz z pamięci (2 minuty)</div>
+                        <div class="step-desc">Bez podglądania! Wpisz tyle słów ile pamiętasz.</div>
                     </div>
                 </div>
-
-                <!-- Tip 3 -->
-                <div class="tip-card blue">
-                    <div class="tip-number">03 / Zrozumienie</div>
-                    <span class="tip-icon">🗣️</span>
-                    <div class="tip-title">Technika Feynmana</div>
-                    <div class="tip-desc">
-                        Wytłumacz materiał na głos prostymi słowami — tak, jakbyś tłumaczył dziecku. Tam, gdzie utkniesz, jest luka w wiedzy. Wróć i uzupełnij.
-                    </div>
-                </div>
-
-                <!-- Tip 4 -->
-                <div class="tip-card purple">
-                    <div class="tip-number">04 / Struktura</div>
-                    <span class="tip-icon">🧩</span>
-                    <div class="tip-title">Chunking + skojarzenia</div>
-                    <div class="tip-desc">
-                        Grupuj słowa w małe bloki i łącz je z tym, co już znasz. Wymyśl historyjkę lub obraz. Mózg zapamiętuje przez skojarzenia — im bardziej absurdalne, tym lepiej!
+                <div class="recall-step">
+                    <div class="step-num" id="sn3">3</div>
+                    <div class="step-content">
+                        <div class="step-title">Sprawdź i oceń siebie</div>
+                        <div class="step-desc">Odkryj odpowiedź i oceń ile zapamiętałeś.</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Timeline interwałów -->
-            <div class="repetition-visual">
-                <h3>📈 Harmonogram powtórek — krzywa zapominania</h3>
-                <div class="rep-timeline">
-                    <div class="rep-node">
-                        <div class="rep-dot now">1</div>
-                        <div class="rep-label">Teraz<br>nauka</div>
+            <!-- Ustawienia (faza 1) -->
+            <div id="phaseSettings">
+                <div style="margin:24px 0 16px;">
+                    <span class="lbl">Kategoria słów</span>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;" id="catBtns">
+                        <button class="btn-outline cat-btn" data-cat="all" onclick="setCat(this)">Wszystkie</button>
+                        <button class="btn-outline cat-btn" data-cat="nature" onclick="setCat(this)">🌿 Przyroda</button>
+                        <button class="btn-outline cat-btn" data-cat="geo" onclick="setCat(this)">🌍 Geografia</button>
+                        <button class="btn-outline cat-btn" data-cat="env" onclick="setCat(this)">♻️ Środowisko</button>
+                        <button class="btn-outline cat-btn" data-cat="adj" onclick="setCat(this)">🌡️ Przymiotniki</button>
+                        <button class="btn-outline cat-btn" data-cat="custom" onclick="setCat(this)">📝 Moje słowa</button>
                     </div>
-                    <div class="rep-line"></div>
-                    <div class="rep-node">
-                        <div class="rep-dot d1">2</div>
-                        <div class="rep-label">1 h<br>później</div>
-                    </div>
-                    <div class="rep-line"></div>
-                    <div class="rep-node">
-                        <div class="rep-dot d3">3</div>
-                        <div class="rep-label">Dzień<br>później</div>
-                    </div>
-                    <div class="rep-line"></div>
-                    <div class="rep-node">
-                        <div class="rep-dot d7">4</div>
-                        <div class="rep-label">3 dni<br>później</div>
-                    </div>
-                    <div class="rep-line"></div>
-                    <div class="rep-node">
-                        <div class="rep-dot d14">5</div>
-                        <div class="rep-label">Tydzień<br>później</div>
-                    </div>
-                    <div class="rep-line" style="background: rgba(201,168,76,0.05);"></div>
-                    <div class="rep-node">
-                        <div class="rep-dot" style="background: rgba(201,168,76,0.08); color: var(--text3);">∞</div>
-                        <div class="rep-label">Trwała<br>pamięć</div>
-                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+                    <span class="lbl" style="margin-bottom:0;white-space:nowrap;">Ilość słów:</span>
+                    <input type="range" id="rcCount" min="5" max="30" value="10" style="flex:1;accent-color:var(--accent);" oninput="document.getElementById('rcCountVal').textContent=this.value">
+                    <span id="rcCountVal" style="font-weight:700;color:var(--accent);min-width:24px;">10</span>
+                </div>
+                <button class="btn-primary" style="width:100%;padding:15px;" onclick="startRecall()">▶ Rozpocznij sesję</button>
+            </div>
+
+            <!-- Pisanie (faza 2) -->
+            <div id="phaseWrite" class="hidden">
+                <div style="margin-top:16px;">
+                    <div class="timer-bar-wrap"><div class="timer-bar" id="timerBar" style="width:100%;"></div></div>
+                    <div class="timer-text" id="timerText">2:00</div>
+                </div>
+                <div style="margin:16px 0 12px;">
+                    <span class="lbl">Wypisz słowa z pamięci (po polsku lub po niemiecku):</span>
+                    <textarea class="recall-input" id="rcInput" placeholder="Wpisz tutaj wszystkie słowa które pamiętasz…&#10;np: Wasser, rzeka, Berg, pustynia…"></textarea>
+                </div>
+                <div style="display:flex;gap:10px;">
+                    <button class="btn-primary" style="flex:1;padding:13px;" onclick="finishWrite()">✓ Gotowe — sprawdź wynik</button>
+                    <button class="btn-outline" style="padding:13px;" onclick="finishWrite()">Pomiń timer</button>
                 </div>
             </div>
 
-            <!-- Pro tip -->
-            <div class="pro-tip">
-                <div class="pro-tip-icon">💡</div>
-                <div>
-                    <h4>Wskazówka na szybko</h4>
-                    <p>Jeśli musisz nauczyć się czegoś w jeden wieczór: przeczytaj → zamknij → zapisz wszystko co pamiętasz → sprawdź luki → powtórz luki. Na koniec <strong style="color: var(--text);">idź spać</strong> — mózg konsoliduje pamięć podczas snu.</p>
+            <!-- Sprawdzanie (faza 3) -->
+            <div id="phaseCheck" class="hidden">
+                <div id="rcScore" style="text-align:center;padding:20px 0 10px;"></div>
+
+                <div class="recall-answer-box">
+                    <div id="revealWrap" class="reveal-btn-wrap" onclick="revealAnswer()">
+                        <span>👆 Kliknij aby zobaczyć pełną listę słów z tej sesji</span>
+                    </div>
+                    <div id="answerContent" class="hidden">
+                        <div class="answer-label">✅ Słowa z tej sesji</div>
+                        <div class="recall-answer-words" id="answerWords"></div>
+                    </div>
+                </div>
+
+                <div class="self-rating" id="selfRating">
+                    <span class="lbl">Jak Ci poszło?</span>
+                    <div class="rating-buttons">
+                        <button class="rating-btn easy" onclick="rate('easy')">😊 Dobrze<br><span style="font-weight:400;font-size:0.85em;">Pamiętam &gt;70%</span></button>
+                        <button class="rating-btn hard" onclick="rate('hard')">😅 Ciężko<br><span style="font-weight:400;font-size:0.85em;">Pamiętam 30–70%</span></button>
+                        <button class="rating-btn unknown" onclick="rate('unknown')">😬 Słabo<br><span style="font-weight:400;font-size:0.85em;">Pamiętam &lt;30%</span></button>
+                    </div>
+                </div>
+
+                <div id="rcFeedback" class="hidden" style="margin-top:16px;"></div>
+
+                <div class="recall-controls">
+                    <button class="btn-primary" onclick="startRecall()">🔄 Nowa sesja</button>
+                    <button class="btn-outline" onclick="resetToSettings()">← Zmień ustawienia</button>
                 </div>
             </div>
-        </section>
 
-    </div><!-- /.container -->
+        </div>
+    </div>
 
-    <script>
-        let words = [];
-        let unknownWords = [];
-        let currentIndex = 0;
-        let currentMode = 'add';
-        let quizMode = '';
-        let isFlipped = false;
-        let showUnknownOnly = false;
-        let shuffledWords = [];
+</div>
 
-        const WORDS_VERSION = 1;
+<script>
+/* ═══ MAIN APP ═══ */
+let words=[], unknownWords=[], currentIndex=0, currentMode='add', quizMode='', isFlipped=false, showUnknownOnly=false, shuffledWords=[];
+const WORDS_VERSION=1;
 
-        const initialWords = [
-            { german: 'die Erde', polish: 'Ziemia' },
-            { german: 'der Planet / die Planeten', polish: 'planeta / planety' },
-            { german: 'das Sonnensystem', polish: 'Układ Słoneczny' },
-            { german: 'die Atmosphäre', polish: 'atmosfera' },
-            { german: 'das Ökosystem', polish: 'ekosystem' },
-            { german: 'die Erdoberfläche', polish: 'powierzchnia Ziemi' },
-            { german: 'die Umwelt', polish: 'środowisko' },
-            { german: 'das Leben', polish: 'życie' },
-            { german: 'die Vielfalt', polish: 'różnorodność' },
-            { german: 'die belebte Welt', polish: 'świat ożywiony' },
-            { german: 'das Wasser', polish: 'woda' },
-            { german: 'das Trinkwasser', polish: 'woda pitna' },
-            { german: 'der Ozean / die Ozeane', polish: 'ocean / oceany' },
-            { german: 'das Meer / die Meere', polish: 'morze / morza' },
-            { german: 'der See', polish: 'jezioro' },
-            { german: 'der Fluss', polish: 'rzeka' },
-            { german: 'die Küste', polish: 'wybrzeże' },
-            { german: 'der Strand', polish: 'plaża' },
-            { german: 'die Insel', polish: 'wyspa' },
-            { german: 'der Berg / die Berge', polish: 'góra / góry' },
-            { german: 'das Tal / die Täler', polish: 'dolina / doliny' },
-            { german: 'der Wald / die Wälder', polish: 'las / lasy' },
-            { german: 'der Regenwald', polish: 'las deszczowy' },
-            { german: 'die Wüste', polish: 'pustynia' },
-            { german: 'die Pflanze / die Pflanzen', polish: 'roślina / rośliny' },
-            { german: 'der Mikroorganismus', polish: 'mikroorganizm' },
-            { german: 'das Insekt / die Insekten', polish: 'owad / owady' },
-            { german: 'der Fisch / die Fische', polish: 'ryba / ryby' },
-            { german: 'der Vogel / die Vögel', polish: 'ptak / ptaki' },
-            { german: 'das Säugetier / die Säugetiere', polish: 'ssak / ssaki' },
-            { german: 'das Licht', polish: 'światło' },
-            { german: 'die Luft', polish: 'powietrze' },
-            { german: 'die Wärme', polish: 'ciepło' },
-            { german: 'die Nahrung', polish: 'pożywienie' },
-            { german: 'kalt', polish: 'zimny' },
-            { german: 'warm', polish: 'ciepły' },
-            { german: 'heiß', polish: 'gorący' },
-            { german: 'kühl', polish: 'chłodny' },
-            { german: 'feucht', polish: 'wilgotny' },
-            { german: 'trocken', polish: 'suchy' },
-            { german: 'tropisch', polish: 'tropikalny' },
-            { german: 'Afrika', polish: 'Afryka' },
-            { german: 'Asien', polish: 'Azja' },
-            { german: 'Europa', polish: 'Europa' },
-            { german: 'Südamerika', polish: 'Ameryka Południowa' },
-            { german: 'Nordamerika', polish: 'Ameryka Północna' },
-            { german: 'Australien', polish: 'Australia' },
-            { german: 'Italien', polish: 'Włochy' },
-            { german: 'Mexiko', polish: 'Meksyk' },
-            { german: 'Brasilien', polish: 'Brazylia' },
-            { german: 'umweltfreundlich', polish: 'przyjazny dla środowiska' },
-            { german: 'umweltbegeistert', polish: 'entuzjasta ochrony środowiska' },
-            { german: 'Recycling', polish: 'recykling' },
-            { german: 'wiederverwertbar', polish: 'nadający się do ponownego użycia' },
-            { german: 'sauber', polish: 'czysty' },
-            { german: 'Stadtreinigung', polish: 'oczyszczanie miasta' },
-            { german: 'Plogging', polish: 'bieganie i zbieranie śmieci' },
-            { german: 'der Müll', polish: 'śmieci' },
-            { german: 'die Mülldeponie', polish: 'wysypisko śmieci' },
-            { german: 'der Elektroschrott', polish: 'elektrośmieci' },
-            { german: 'der Schrott', polish: 'złom' },
-            { german: 'die Abfälle', polish: 'odpady' },
-            { german: 'der Sperrmüll', polish: 'odpady wielkogabarytowe' },
-            { german: 'verschmutzt', polish: 'zanieczyszczony' },
-            { german: 'umweltfeindlich', polish: 'szkodliwy dla środowiska' },
-            { german: 'die Luftverschmutzung', polish: 'zanieczyszczenie powietrza' },
-            { german: 'das Kohlendioxid (CO₂)', polish: 'dwutlenek węgla' },
-            { german: 'das Methan', polish: 'metan' },
-            { german: 'das Treibhausgas', polish: 'gaz cieplarniany' },
-            { german: 'zerstören', polish: 'niszczyć' },
-            { german: 'Energie erzeugen', polish: 'produkować energię' },
-            { german: 'Energie verbrauchen', polish: 'zużywać energię' },
-            { german: 'mit Kohle heizen', polish: 'ogrzewać węglem' },
-            { german: 'Benzin verbrauchen', polish: 'zużywać benzynę' },
-            { german: 'in die Luft blasen', polish: 'emitować do powietrza' },
-            { german: 'die Umwelt ausbeuten', polish: 'eksploatować środowisko' },
-            { german: 'die Zucht der Rinder', polish: 'hodowla bydła' },
-            { german: 'elektrische Geräte', polish: 'urządzenia elektryczne' }
-        ];
+const initialWords=[
+    {german:'die Erde',polish:'Ziemia',cat:'nature'},
+    {german:'der Planet / die Planeten',polish:'planeta / planety',cat:'nature'},
+    {german:'das Sonnensystem',polish:'Układ Słoneczny',cat:'nature'},
+    {german:'die Atmosphäre',polish:'atmosfera',cat:'nature'},
+    {german:'das Ökosystem',polish:'ekosystem',cat:'nature'},
+    {german:'die Erdoberfläche',polish:'powierzchnia Ziemi',cat:'nature'},
+    {german:'die Umwelt',polish:'środowisko',cat:'env'},
+    {german:'das Leben',polish:'życie',cat:'nature'},
+    {german:'die Vielfalt',polish:'różnorodność',cat:'nature'},
+    {german:'das Wasser',polish:'woda',cat:'nature'},
+    {german:'das Trinkwasser',polish:'woda pitna',cat:'nature'},
+    {german:'der Ozean / die Ozeane',polish:'ocean / oceany',cat:'geo'},
+    {german:'das Meer / die Meere',polish:'morze / morza',cat:'geo'},
+    {german:'der See',polish:'jezioro',cat:'geo'},
+    {german:'der Fluss',polish:'rzeka',cat:'geo'},
+    {german:'die Küste',polish:'wybrzeże',cat:'geo'},
+    {german:'der Strand',polish:'plaża',cat:'geo'},
+    {german:'die Insel',polish:'wyspa',cat:'geo'},
+    {german:'der Berg / die Berge',polish:'góra / góry',cat:'geo'},
+    {german:'das Tal / die Täler',polish:'dolina / doliny',cat:'geo'},
+    {german:'der Wald / die Wälder',polish:'las / lasy',cat:'geo'},
+    {german:'der Regenwald',polish:'las deszczowy',cat:'geo'},
+    {german:'die Wüste',polish:'pustynia',cat:'geo'},
+    {german:'die Pflanze / die Pflanzen',polish:'roślina / rośliny',cat:'nature'},
+    {german:'das Insekt / die Insekten',polish:'owad / owady',cat:'nature'},
+    {german:'der Fisch / die Fische',polish:'ryba / ryby',cat:'nature'},
+    {german:'der Vogel / die Vögel',polish:'ptak / ptaki',cat:'nature'},
+    {german:'das Säugetier / die Säugetiere',polish:'ssak / ssaki',cat:'nature'},
+    {german:'das Licht',polish:'światło',cat:'nature'},
+    {german:'die Luft',polish:'powietrze',cat:'nature'},
+    {german:'die Wärme',polish:'ciepło',cat:'nature'},
+    {german:'die Nahrung',polish:'pożywienie',cat:'nature'},
+    {german:'kalt',polish:'zimny',cat:'adj'},
+    {german:'warm',polish:'ciepły',cat:'adj'},
+    {german:'heiß',polish:'gorący',cat:'adj'},
+    {german:'kühl',polish:'chłodny',cat:'adj'},
+    {german:'feucht',polish:'wilgotny',cat:'adj'},
+    {german:'trocken',polish:'suchy',cat:'adj'},
+    {german:'tropisch',polish:'tropikalny',cat:'adj'},
+    {german:'Afrika',polish:'Afryka',cat:'geo'},
+    {german:'Asien',polish:'Azja',cat:'geo'},
+    {german:'Europa',polish:'Europa',cat:'geo'},
+    {german:'Südamerika',polish:'Ameryka Południowa',cat:'geo'},
+    {german:'Nordamerika',polish:'Ameryka Północna',cat:'geo'},
+    {german:'Australien',polish:'Australia',cat:'geo'},
+    {german:'Italien',polish:'Włochy',cat:'geo'},
+    {german:'Mexiko',polish:'Meksyk',cat:'geo'},
+    {german:'Brasilien',polish:'Brazylia',cat:'geo'},
+    {german:'umweltfreundlich',polish:'przyjazny dla środowiska',cat:'env'},
+    {german:'Recycling',polish:'recykling',cat:'env'},
+    {german:'wiederverwertbar',polish:'nadający się do ponownego użycia',cat:'env'},
+    {german:'sauber',polish:'czysty',cat:'adj'},
+    {german:'Plogging',polish:'bieganie i zbieranie śmieci',cat:'env'},
+    {german:'der Müll',polish:'śmieci',cat:'env'},
+    {german:'die Mülldeponie',polish:'wysypisko śmieci',cat:'env'},
+    {german:'der Elektroschrott',polish:'elektrośmieci',cat:'env'},
+    {german:'der Schrott',polish:'złom',cat:'env'},
+    {german:'die Abfälle',polish:'odpady',cat:'env'},
+    {german:'verschmutzt',polish:'zanieczyszczony',cat:'adj'},
+    {german:'umweltfeindlich',polish:'szkodliwy dla środowiska',cat:'env'},
+    {german:'die Luftverschmutzung',polish:'zanieczyszczenie powietrza',cat:'env'},
+    {german:'das Kohlendioxid (CO₂)',polish:'dwutlenek węgla',cat:'env'},
+    {german:'das Methan',polish:'metan',cat:'env'},
+    {german:'das Treibhausgas',polish:'gaz cieplarniany',cat:'env'},
+    {german:'zerstören',polish:'niszczyć',cat:'env'},
+    {german:'Energie erzeugen',polish:'produkować energię',cat:'env'},
+    {german:'Energie verbrauchen',polish:'zużywać energię',cat:'env'},
+    {german:'die Umwelt ausbeuten',polish:'eksploatować środowisko',cat:'env'},
+    {german:'elektrische Geräte',polish:'urządzenia elektryczne',cat:'env'}
+];
 
-        function loadData() {
-            const savedVersion = localStorage.getItem('wordsVersion');
-            const savedWords = localStorage.getItem('germanWords');
-            if (savedWords && savedVersion === String(WORDS_VERSION)) {
-                words = JSON.parse(savedWords);
-                const savedUnknown = localStorage.getItem('unknownWords');
-                if (savedUnknown) unknownWords = JSON.parse(savedUnknown);
-            } else {
-                localStorage.removeItem('germanWords');
-                localStorage.removeItem('unknownWords');
-                unknownWords = [];
-                words = initialWords.map((word, index) => ({
-                    id: Date.now() + index,
-                    german: word.german,
-                    polish: word.polish,
-                    correct: 0,
-                    wrong: 0
-                }));
-                saveData();
-            }
-            updateDisplay();
+function loadData(){
+    const sv=localStorage.getItem('wordsVersion'),sw=localStorage.getItem('germanWords');
+    if(sw&&sv===String(WORDS_VERSION)){
+        words=JSON.parse(sw);
+        const su=localStorage.getItem('unknownWords');
+        if(su) unknownWords=JSON.parse(su);
+    } else {
+        localStorage.removeItem('germanWords');localStorage.removeItem('unknownWords');
+        unknownWords=[];
+        words=initialWords.map((w,i)=>({id:Date.now()+i,german:w.german,polish:w.polish,cat:w.cat||'all',correct:0,wrong:0}));
+        saveData();
+    }
+    updateDisplay();
+}
+
+function saveData(){
+    localStorage.setItem('wordsVersion',String(WORDS_VERSION));
+    localStorage.setItem('germanWords',JSON.stringify(words));
+    localStorage.setItem('unknownWords',JSON.stringify(unknownWords));
+}
+
+function addWord(){
+    const g=document.getElementById('germanInput').value.trim(),p=document.getElementById('polishInput').value.trim();
+    if(g&&p){words.push({id:Date.now(),german:g,polish:p,cat:'custom',correct:0,wrong:0});document.getElementById('germanInput').value='';document.getElementById('polishInput').value='';saveData();updateDisplay();}
+}
+
+function deleteWord(id){words=words.filter(w=>w.id!==id);unknownWords=unknownWords.filter(u=>u!==id);saveData();updateDisplay();}
+function getSuccessRate(w){const t=w.correct+w.wrong;return t>0?Math.round(w.correct/t*100):0;}
+function shuffleArray(arr){const s=[...arr];for(let i=s.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[s[i],s[j]]=[s[j],s[i]];}return s;}
+
+function updateDisplay(){
+    document.getElementById('wordCount').textContent=words.length;
+    const ul=words.filter(w=>unknownWords.includes(w.id));
+    document.getElementById('unknownCount').textContent=ul.length;
+    if(ul.length>0){
+        document.getElementById('unknownSection').classList.remove('hidden');
+        document.getElementById('unknownList').innerHTML=ul.map(w=>`<div class="word-item"><div class="word-text"><span class="word-german">${w.german}</span><span class="word-sep">→</span><span class="word-polish">${w.polish}</span></div><button class="btn-secondary" style="padding:7px 12px;" onclick="removeFromUnknown(${w.id})">✓</button></div>`).join('');
+    } else document.getElementById('unknownSection').classList.add('hidden');
+    const sorted=[...words].sort((a,b)=>getSuccessRate(a)-getSuccessRate(b));
+    document.getElementById('wordList').innerHTML=sorted.map(w=>{
+        const r=getSuccessRate(w),t=w.correct+w.wrong,cls=r>=70?'rate-high':r>=40?'rate-medium':'rate-low';
+        return `<div class="word-item"><div class="word-text"><span class="word-german">${w.german}</span><span class="word-sep">→</span><span class="word-polish">${w.polish}</span>${unknownWords.includes(w.id)?'<span class="unknown-badge">Nie znam</span>':''}</div><div class="stats"><span class="success-rate ${cls}">${t>0?r+'%':'Nowe'}</span><button class="btn-danger" onclick="deleteWord(${w.id})">🗑️</button></div></div>`;
+    }).join('');
+    document.getElementById('modeButtons').classList.toggle('hidden',words.length===0);
+}
+
+function removeFromUnknown(id){unknownWords=unknownWords.filter(u=>u!==id);saveData();updateDisplay();}
+function markUnknown(){const f=getFilteredWords(),c=f[currentIndex];if(!unknownWords.includes(c.id)){unknownWords.push(c.id);saveData();}nextQuiz();}
+function toggleUnknownFilter(){
+    showUnknownOnly=!showUnknownOnly;currentIndex=0;
+    shuffledWords=showUnknownOnly?shuffleArray(words.filter(w=>unknownWords.includes(w.id))):shuffleArray(words);
+    const t=showUnknownOnly?'Tylko nie znam':'Wszystkie słowa';
+    const ft=document.getElementById('filterText'),ftq=document.getElementById('filterTextQuiz');
+    if(ft)ft.textContent=t;if(ftq)ftq.textContent=t;
+    if(currentMode==='flashcards')showFlashcard();else if(currentMode.startsWith('quiz'))showQuizQuestion();
+}
+function getFilteredWords(){return showUnknownOnly?shuffledWords.filter(w=>unknownWords.includes(w.id)):shuffledWords;}
+
+function startMode(mode){
+    currentMode=mode;currentIndex=0;isFlipped=false;showUnknownOnly=false;shuffledWords=shuffleArray(words);
+    ['addMode','wordListSection','unknownSection','modeButtons'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+    if(mode==='flashcards'){document.getElementById('flashcardsMode').classList.remove('hidden');showFlashcard();}
+    else if(mode.startsWith('quiz')){quizMode=mode;document.getElementById('quizMode').classList.remove('hidden');document.getElementById('quizDirectionLabel').textContent=mode==='quiz-de-pl'?'🇩🇪 DE → 🇵🇱 PL':'🇵🇱 PL → 🇩🇪 DE';showQuizQuestion();}
+}
+
+function backToMain(){
+    currentMode='add';showUnknownOnly=false;
+    document.getElementById('flashcardsMode').classList.add('hidden');document.getElementById('quizMode').classList.add('hidden');
+    ['addMode','wordListSection','modeButtons'].forEach(id=>document.getElementById(id).classList.remove('hidden'));
+    updateDisplay();
+}
+
+function showFlashcard(){
+    const f=getFilteredWords();if(!f.length)return;
+    const w=f[currentIndex];
+    document.getElementById('flashcardPolish').textContent=w.polish;
+    document.getElementById('flashcardGerman').textContent=w.german;
+    document.getElementById('flashcardStats').textContent=`Dobrze: ${w.correct} | Źle: ${w.wrong}`;
+    document.getElementById('flashcardCounter').textContent=`${currentIndex+1} / ${f.length}`;
+    document.getElementById('flashcard').classList.remove('flipped');isFlipped=false;
+}
+
+function flipCard(){const c=document.getElementById('flashcard');isFlipped?c.classList.remove('flipped'):c.classList.add('flipped');isFlipped=!isFlipped;}
+function nextCard(){const f=getFilteredWords();currentIndex=(currentIndex+1)%f.length;showFlashcard();}
+function previousCard(){const f=getFilteredWords();currentIndex=(currentIndex-1+f.length)%f.length;showFlashcard();}
+
+function showQuizQuestion(){
+    const f=getFilteredWords();if(!f.length)return;
+    const w=f[currentIndex],de=quizMode==='quiz-de-pl';
+    document.getElementById('questionLang').textContent=de?'Deutsch':'Polski';
+    document.getElementById('questionText').textContent=de?w.german:w.polish;
+    document.getElementById('quizCounter').textContent=`${currentIndex+1} / ${f.length}`;
+    document.getElementById('quizStats').textContent=`Dobrze: ${w.correct} | Źle: ${w.wrong} (${getSuccessRate(w)}% sukcesu)`;
+    document.getElementById('answerSection').classList.remove('hidden');
+    document.getElementById('resultSection').classList.add('hidden');
+    document.getElementById('answerInput').value='';document.getElementById('answerInput').focus();
+}
+
+function checkAnswer(){
+    const f=getFilteredWords(),w=f[currentIndex],ans=document.getElementById('answerInput').value.trim();
+    if(!ans)return;
+    const de=quizMode==='quiz-de-pl',ok=ans.toLowerCase()===(de?w.polish:w.german).toLowerCase();
+    if(ok)w.correct++;else w.wrong++;saveData();
+    const rb=document.getElementById('resultBox');
+    rb.className='result '+(ok?'correct':'wrong');
+    rb.innerHTML=`<div class="result-title">${ok?'✓ Dobrze!':'✗ Źle'}</div>${!ok?`<div style="color:var(--text2);">Twoja: <strong>${ans}</strong><br>Prawidłowo: <strong style="color:var(--green);">${de?w.polish:w.german}</strong></div>`:''}`;
+    document.getElementById('answerSection').classList.add('hidden');
+    document.getElementById('resultSection').classList.remove('hidden');
+    setTimeout(()=>document.getElementById('nextQuizBtn').focus(),100);
+}
+
+function nextQuiz(){const f=getFilteredWords();currentIndex=(currentIndex+1)%f.length;showQuizQuestion();}
+
+/* ═══ AKTYWNE PRZYPOMINANIE ═══ */
+let rcCat='all', rcWords=[], rcTimer=null;
+const RC_TIME=120;
+
+function setCat(btn){
+    document.querySelectorAll('.cat-btn').forEach(b=>{
+        b.style.borderColor='';b.style.color='';b.style.background='';
+    });
+    btn.style.borderColor='var(--accent)';btn.style.color='var(--accent)';btn.style.background='var(--accent-soft)';
+    rcCat=btn.dataset.cat;
+}
+
+function startRecall(){
+    const count=parseInt(document.getElementById('rcCount').value);
+    const pool=words.filter(w=>rcCat==='all'||w.cat===rcCat);
+    rcWords=shuffleArray(pool).slice(0,Math.min(count,pool.length));
+    if(rcWords.length===0){alert('Brak słów w tej kategorii!');return;}
+
+    document.getElementById('phaseSettings').classList.add('hidden');
+    document.getElementById('phaseCheck').classList.add('hidden');
+    document.getElementById('phaseWrite').classList.remove('hidden');
+    document.getElementById('rcInput').value='';
+    document.getElementById('rcInput').focus();
+
+    setStep(1,'done');setStep(2,'active');setStep(3,'');
+
+    let t=RC_TIME;updateTimer(t);
+    clearInterval(rcTimer);
+    rcTimer=setInterval(()=>{t--;updateTimer(t);if(t<=0){clearInterval(rcTimer);finishWrite();}},1000);
+}
+
+function setStep(n,state){
+    const el=document.getElementById('sn'+n);
+    el.classList.remove('active','done');
+    if(state==='active')el.classList.add('active');
+    else if(state==='done'){el.classList.add('done');el.textContent='✓';}
+    else el.textContent=n;
+}
+
+function updateTimer(s){
+    document.getElementById('timerText').textContent=`${Math.floor(s/60)}:${(s%60).toString().padStart(2,'0')}`;
+    document.getElementById('timerBar').style.width=(s/RC_TIME*100)+'%';
+    document.getElementById('timerBar').style.background=s<30?'var(--red)':s<60?'var(--orange)':'var(--accent)';
+}
+
+function finishWrite(){
+    clearInterval(rcTimer);
+    document.getElementById('phaseWrite').classList.add('hidden');
+    document.getElementById('phaseCheck').classList.remove('hidden');
+    setStep(2,'done');setStep(3,'active');
+
+    const userText=document.getElementById('rcInput').value.toLowerCase();
+    let matched=0;
+    rcWords.forEach(w=>{
+        const parts=[...w.german.toLowerCase().split(/[\/,()]+/),...w.polish.toLowerCase().split(/[\/,()]+/)].map(s=>s.trim()).filter(s=>s.length>2);
+        if(parts.some(p=>userText.includes(p)))matched++;
+    });
+
+    const pct=Math.round(matched/rcWords.length*100);
+    const emoji=pct>=70?'🏆':pct>=40?'💪':'📚';
+    document.getElementById('rcScore').innerHTML=`<div style="font-size:2.4em;margin-bottom:6px;">${emoji}</div><div style="font-family:'Playfair Display',serif;font-size:1.6em;font-weight:700;color:var(--accent);">${matched} / ${rcWords.length}</div><div style="color:var(--text2);font-size:0.88em;margin-top:4px;">słów rozpoznanych (${pct}%)</div>`;
+
+    document.getElementById('answerWords').innerHTML=rcWords.map(w=>`<div class="answer-word-chip"><span class="de">${w.german}</span><span class="pl">→ ${w.polish}</span></div>`).join('');
+    document.getElementById('selfRating').classList.remove('hidden');
+    document.getElementById('rcFeedback').classList.add('hidden');
+    document.getElementById('revealWrap').classList.remove('hidden');
+    document.getElementById('answerContent').classList.add('hidden');
+}
+
+function revealAnswer(){
+    document.getElementById('revealWrap').classList.add('hidden');
+    document.getElementById('answerContent').classList.remove('hidden');
+}
+
+function rate(r){
+    const msgs={
+        easy:{icon:'🎉',title:'Świetnie!',text:'Pamiętasz dobrze! Wróć do tych słów za 3–7 dni.',color:'var(--green-soft)',border:'#b7e4c7',tc:'var(--green)'},
+        hard:{icon:'💪',title:'Dobra robota!',text:'Ćwicz dalej. Wróć do tych słów jutro.',color:'var(--orange-soft)',border:'#f5d0a9',tc:'var(--orange)'},
+        unknown:{icon:'📖',title:'Nie przejmuj się!',text:'Powtórz te słowa za 1 godzinę. Spróbuj ponownie!',color:'var(--red-soft)',border:'#f5c6c2',tc:'var(--red)'}
+    };
+    const m=msgs[r];
+    document.getElementById('rcFeedback').innerHTML=`<div style="background:${m.color};border:1.5px solid ${m.border};border-radius:10px;padding:16px 20px;display:flex;gap:12px;align-items:center;"><span style="font-size:1.6em;">${m.icon}</span><div><div style="font-weight:700;color:${m.tc};margin-bottom:2px;">${m.title}</div><div style="font-size:0.83em;color:var(--text2);">${m.text}</div></div></div>`;
+    document.getElementById('rcFeedback').classList.remove('hidden');
+    document.getElementById('selfRating').classList.add('hidden');
+}
+
+function resetToSettings(){
+    clearInterval(rcTimer);
+    ['phaseWrite','phaseCheck'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+    document.getElementById('phaseSettings').classList.remove('hidden');
+    [1,2,3].forEach(n=>setStep(n,''));
+}
+
+/* ═══ KEYBOARD ═══ */
+document.addEventListener('DOMContentLoaded',()=>{
+    document.getElementById('germanInput').addEventListener('keypress',e=>{if(e.key==='Enter')addWord();});
+    document.getElementById('polishInput').addEventListener('keypress',e=>{if(e.key==='Enter')addWord();});
+    document.getElementById('answerInput').addEventListener('keypress',e=>{if(e.key==='Enter'){e.preventDefault();checkAnswer();}});
+    document.addEventListener('keydown',e=>{
+        if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
+        if(currentMode==='flashcards'&&!document.getElementById('flashcardsMode').classList.contains('hidden')){
+            if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextCard();}
+            else if(e.key==='ArrowLeft'){e.preventDefault();previousCard();}
+            else if(e.key==='Enter'){e.preventDefault();flipCard();}
         }
-
-        function saveData() {
-            localStorage.setItem('wordsVersion', String(WORDS_VERSION));
-            localStorage.setItem('germanWords', JSON.stringify(words));
-            localStorage.setItem('unknownWords', JSON.stringify(unknownWords));
+        if(currentMode.startsWith('quiz')&&!document.getElementById('resultSection').classList.contains('hidden')){
+            if(e.key==='Enter'||e.key===' '||e.key==='ArrowRight'){e.preventDefault();nextQuiz();}
         }
-
-        function addWord() {
-            const german = document.getElementById('germanInput').value.trim();
-            const polish = document.getElementById('polishInput').value.trim();
-            if (german && polish) {
-                words.push({ id: Date.now(), german, polish, correct: 0, wrong: 0 });
-                document.getElementById('germanInput').value = '';
-                document.getElementById('polishInput').value = '';
-                saveData();
-                updateDisplay();
-            }
+        if(currentMode.startsWith('quiz')&&!document.getElementById('answerSection').classList.contains('hidden')){
+            if(e.key==='?'||e.key==='/'){e.preventDefault();markUnknown();}
         }
-
-        function deleteWord(id) {
-            words = words.filter(w => w.id !== id);
-            unknownWords = unknownWords.filter(uid => uid !== id);
-            saveData();
-            updateDisplay();
-        }
-
-        function toggleUnknownFilter() {
-            showUnknownOnly = !showUnknownOnly;
-            currentIndex = 0;
-            if (showUnknownOnly) {
-                shuffledWords = shuffleArray(words.filter(w => unknownWords.includes(w.id)));
-            } else {
-                shuffledWords = shuffleArray(words);
-            }
-            const text = showUnknownOnly ? 'Tylko nie znam' : 'Wszystkie słowa';
-            const ft = document.getElementById('filterText');
-            const ftq = document.getElementById('filterTextQuiz');
-            if (ft) ft.textContent = text;
-            if (ftq) ftq.textContent = text;
-            if (currentMode === 'flashcards') showFlashcard();
-            else if (currentMode.startsWith('quiz')) showQuizQuestion();
-        }
-
-        function getFilteredWords() {
-            return showUnknownOnly ? shuffledWords.filter(w => unknownWords.includes(w.id)) : shuffledWords;
-        }
-
-        function shuffleArray(array) {
-            const s = [...array];
-            for (let i = s.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [s[i], s[j]] = [s[j], s[i]];
-            }
-            return s;
-        }
-
-        function getSuccessRate(word) {
-            const total = word.correct + word.wrong;
-            return total > 0 ? Math.round((word.correct / total) * 100) : 0;
-        }
-
-        function updateDisplay() {
-            document.getElementById('wordCount').textContent = words.length;
-            const unknownList = words.filter(w => unknownWords.includes(w.id));
-            document.getElementById('unknownCount').textContent = unknownList.length;
-            if (unknownList.length > 0) {
-                document.getElementById('unknownSection').classList.remove('hidden');
-                document.getElementById('unknownList').innerHTML = unknownList.map(word => `
-                    <div class="word-item">
-                        <div class="word-text">
-                            <span class="word-german">${word.german}</span>
-                            <span class="word-sep">→</span>
-                            <span class="word-polish">${word.polish}</span>
-                        </div>
-                        <button class="btn-secondary" style="padding: 8px 12px;" onclick="removeFromUnknown(${word.id})">✓</button>
-                    </div>`).join('');
-            } else {
-                document.getElementById('unknownSection').classList.add('hidden');
-            }
-            const sorted = [...words].sort((a, b) => getSuccessRate(a) - getSuccessRate(b));
-            document.getElementById('wordList').innerHTML = sorted.map(word => {
-                const rate = getSuccessRate(word);
-                const total = word.correct + word.wrong;
-                let cls = 'rate-low';
-                if (rate >= 70) cls = 'rate-high';
-                else if (rate >= 40) cls = 'rate-medium';
-                return `
-                    <div class="word-item">
-                        <div class="word-text">
-                            <span class="word-german">${word.german}</span>
-                            <span class="word-sep">→</span>
-                            <span class="word-polish">${word.polish}</span>
-                            ${unknownWords.includes(word.id) ? '<span class="unknown-badge">Nie znam</span>' : ''}
-                        </div>
-                        <div class="stats">
-                            <span class="success-rate ${cls}">${total > 0 ? rate + '%' : 'Nowe'}</span>
-                            <button class="btn-danger" onclick="deleteWord(${word.id})">🗑️</button>
-                        </div>
-                    </div>`;
-            }).join('');
-            if (words.length > 0) {
-                document.getElementById('modeButtons').classList.remove('hidden');
-            } else {
-                document.getElementById('modeButtons').classList.add('hidden');
-            }
-        }
-
-        function removeFromUnknown(id) {
-            unknownWords = unknownWords.filter(uid => uid !== id);
-            saveData();
-            updateDisplay();
-        }
-
-        function markUnknown() {
-            const filtered = getFilteredWords();
-            const current = filtered[currentIndex];
-            if (!unknownWords.includes(current.id)) {
-                unknownWords.push(current.id);
-                saveData();
-            }
-            nextQuiz();
-        }
-
-        function startMode(mode) {
-            currentMode = mode;
-            currentIndex = 0;
-            isFlipped = false;
-            showUnknownOnly = false;
-            shuffledWords = shuffleArray(words);
-            document.getElementById('addMode').classList.add('hidden');
-            document.getElementById('wordListSection').classList.add('hidden');
-            document.getElementById('unknownSection').classList.add('hidden');
-            document.getElementById('modeButtons').classList.add('hidden');
-            if (mode === 'flashcards') {
-                document.getElementById('flashcardsMode').classList.remove('hidden');
-                showFlashcard();
-            } else if (mode.startsWith('quiz')) {
-                quizMode = mode;
-                document.getElementById('quizMode').classList.remove('hidden');
-                document.getElementById('quizDirectionLabel').textContent =
-                    mode === 'quiz-de-pl' ? '🇩🇪 DE → 🇵🇱 PL' : '🇵🇱 PL → 🇩🇪 DE';
-                showQuizQuestion();
-            }
-        }
-
-        function backToMain() {
-            currentMode = 'add';
-            showUnknownOnly = false;
-            document.getElementById('flashcardsMode').classList.add('hidden');
-            document.getElementById('quizMode').classList.add('hidden');
-            document.getElementById('addMode').classList.remove('hidden');
-            document.getElementById('wordListSection').classList.remove('hidden');
-            document.getElementById('modeButtons').classList.remove('hidden');
-            updateDisplay();
-        }
-
-        function showFlashcard() {
-            const filtered = getFilteredWords();
-            if (!filtered.length) return;
-            const word = filtered[currentIndex];
-            document.getElementById('flashcardPolish').textContent = word.polish;
-            document.getElementById('flashcardGerman').textContent = word.german;
-            document.getElementById('flashcardStats').textContent =
-                `Dobrze: ${word.correct} | Źle: ${word.wrong}`;
-            document.getElementById('flashcardCounter').textContent =
-                `${currentIndex + 1} / ${filtered.length}`;
-            document.getElementById('flashcard').classList.remove('flipped');
-            isFlipped = false;
-        }
-
-        function flipCard() {
-            const card = document.getElementById('flashcard');
-            isFlipped ? card.classList.remove('flipped') : card.classList.add('flipped');
-            isFlipped = !isFlipped;
-        }
-
-        function nextCard() {
-            const f = getFilteredWords();
-            currentIndex = (currentIndex + 1) % f.length;
-            showFlashcard();
-        }
-
-        function previousCard() {
-            const f = getFilteredWords();
-            currentIndex = (currentIndex - 1 + f.length) % f.length;
-            showFlashcard();
-        }
-
-        function showQuizQuestion() {
-            const filtered = getFilteredWords();
-            if (!filtered.length) return;
-            const word = filtered[currentIndex];
-            const isDeToPl = quizMode === 'quiz-de-pl';
-            document.getElementById('questionLang').textContent = isDeToPl ? 'Deutsch' : 'Polski';
-            document.getElementById('questionText').textContent = isDeToPl ? word.german : word.polish;
-            document.getElementById('quizCounter').textContent = `${currentIndex + 1} / ${filtered.length}`;
-            document.getElementById('quizStats').textContent =
-                `Dobrze: ${word.correct} | Źle: ${word.wrong} (${getSuccessRate(word)}% sukcesu)`;
-            document.getElementById('answerSection').classList.remove('hidden');
-            document.getElementById('resultSection').classList.add('hidden');
-            document.getElementById('answerInput').value = '';
-            document.getElementById('answerInput').focus();
-        }
-
-        function checkAnswer() {
-            const filtered = getFilteredWords();
-            const word = filtered[currentIndex];
-            const answer = document.getElementById('answerInput').value.trim();
-            if (!answer) return;
-            const isDeToPl = quizMode === 'quiz-de-pl';
-            const correct = answer.toLowerCase() === (isDeToPl ? word.polish : word.german).toLowerCase();
-            if (correct) word.correct++; else word.wrong++;
-            saveData();
-            const resultBox = document.getElementById('resultBox');
-            resultBox.className = 'result ' + (correct ? 'correct' : 'wrong');
-            resultBox.innerHTML = `
-                <div class="result-title">${correct ? '✓ Dobrze!' : '✗ Źle'}</div>
-                ${!correct ? `<div style="font-size: 1em; color: var(--text2);">
-                    Twoja odpowiedź: <strong>${answer}</strong><br>
-                    Prawidłowo: <strong style="color: var(--green);">${isDeToPl ? word.polish : word.german}</strong>
-                </div>` : ''}`;
-            document.getElementById('answerSection').classList.add('hidden');
-            document.getElementById('resultSection').classList.remove('hidden');
-            setTimeout(() => document.getElementById('nextQuizBtn').focus(), 100);
-        }
-
-        function nextQuiz() {
-            const f = getFilteredWords();
-            currentIndex = (currentIndex + 1) % f.length;
-            showQuizQuestion();
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('germanInput').addEventListener('keypress', e => { if (e.key === 'Enter') addWord(); });
-            document.getElementById('polishInput').addEventListener('keypress', e => { if (e.key === 'Enter') addWord(); });
-            document.getElementById('answerInput').addEventListener('keypress', e => {
-                if (e.key === 'Enter') { e.preventDefault(); checkAnswer(); }
-            });
-            document.addEventListener('keydown', e => {
-                if (e.target.tagName === 'INPUT') return;
-                if (currentMode === 'flashcards' && !document.getElementById('flashcardsMode').classList.contains('hidden')) {
-                    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextCard(); }
-                    else if (e.key === 'ArrowLeft') { e.preventDefault(); previousCard(); }
-                    else if (e.key === 'Enter') { e.preventDefault(); flipCard(); }
-                }
-                if (currentMode.startsWith('quiz') && !document.getElementById('resultSection').classList.contains('hidden')) {
-                    if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') { e.preventDefault(); nextQuiz(); }
-                }
-                if (currentMode.startsWith('quiz') && !document.getElementById('answerSection').classList.contains('hidden')) {
-                    if (e.key === '?' || e.key === '/') { e.preventDefault(); markUnknown(); }
-                }
-            });
-            loadData();
-        });
-    </script>
+    });
+    // Domyślna aktywna kategoria
+    setCat(document.querySelector('[data-cat="all"]'));
+    loadData();
+});
+</script>
 </body>
 </html>
