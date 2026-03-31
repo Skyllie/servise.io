@@ -121,14 +121,10 @@
         .result.correct .result-title { color: var(--green); }
         .result.wrong .result-title { color: var(--red); }
 
-        /* ─── Section divider ─── */
         .section-divider { display: flex; align-items: center; gap: 16px; margin: 50px 0 36px; }
         .section-divider::before, .section-divider::after { content: ''; flex: 1; height: 1.5px; background: var(--border); }
         .section-divider-label { font-size: 0.72em; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text3); white-space: nowrap; }
 
-        /* ══════════════════════════════════════ */
-        /*   AKTYWNE PRZYPOMINANIE               */
-        /* ══════════════════════════════════════ */
         .recall-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-md); overflow: hidden; }
 
         .recall-header { background: var(--accent); padding: 24px 28px; display: flex; align-items: center; gap: 16px; }
@@ -185,7 +181,6 @@
         .timer-bar { height: 100%; background: var(--accent); border-radius: 3px; transition: width 1s linear, background 1s; }
         .timer-text { font-size: 0.8em; color: var(--text3); font-weight: 700; text-align: right; }
 
-        /* Keyboard hint */
         .keyboard-hint { position: fixed; bottom: 22px; right: 22px; background: white; border: 1.5px solid var(--border); padding: 12px 16px; border-radius: var(--radius-sm); font-size: 12px; color: var(--text2); max-width: 240px; line-height: 1.8; box-shadow: var(--shadow); }
         .keyboard-hint strong { color: var(--accent); }
         kbd { background: var(--surface2); border: 1.5px solid var(--border); border-radius: 4px; padding: 1px 5px; font-size: 10px; font-family: monospace; color: var(--text2); }
@@ -307,9 +302,6 @@
         </div>
     </div>
 
-    <!-- ══════════════════════════════════════════════════ -->
-    <!--   AKTYWNE PRZYPOMINANIE — INTERAKTYWNA FUNKCJA   -->
-    <!-- ══════════════════════════════════════════════════ -->
     <div class="section-divider">
         <span class="section-divider-label">🧠 Metoda #1 — Aktywne przypominanie</span>
     </div>
@@ -324,7 +316,6 @@
         </div>
         <div class="recall-body">
 
-            <!-- Kroki -->
             <div class="recall-steps">
                 <div class="recall-step">
                     <div class="step-num" id="sn1">1</div>
@@ -349,7 +340,6 @@
                 </div>
             </div>
 
-            <!-- Ustawienia (faza 1) -->
             <div id="phaseSettings">
                 <div style="margin:24px 0 16px;">
                     <span class="lbl">Kategoria słów</span>
@@ -370,7 +360,6 @@
                 <button class="btn-primary" style="width:100%;padding:15px;" onclick="startRecall()">▶ Rozpocznij sesję</button>
             </div>
 
-            <!-- Pisanie (faza 2) -->
             <div id="phaseWrite" class="hidden">
                 <div style="margin-top:16px;">
                     <div class="timer-bar-wrap"><div class="timer-bar" id="timerBar" style="width:100%;"></div></div>
@@ -386,7 +375,6 @@
                 </div>
             </div>
 
-            <!-- Sprawdzanie (faza 3) -->
             <div id="phaseCheck" class="hidden">
                 <div id="rcScore" style="text-align:center;padding:20px 0 10px;"></div>
 
@@ -425,7 +413,9 @@
 <script>
 /* ═══ MAIN APP ═══ */
 let words=[], unknownWords=[], currentIndex=0, currentMode='add', quizMode='', isFlipped=false, showUnknownOnly=false, shuffledWords=[];
-const WORDS_VERSION=1;
+
+// ── УВЕЛИЧЕНА ВЕРСИЯ: сбросит старый localStorage без поля cat ──
+const WORDS_VERSION = 2;
 
 const initialWords=[
     {german:'die Erde',polish:'Ziemia',cat:'nature'},
@@ -500,24 +490,37 @@ const initialWords=[
 ];
 
 function loadData(){
-    const sv=localStorage.getItem('wordsVersion'),sw=localStorage.getItem('germanWords');
-    if(sw&&sv===String(WORDS_VERSION)){
-        words=JSON.parse(sw);
-        const su=localStorage.getItem('unknownWords');
-        if(su) unknownWords=JSON.parse(su);
+    const sv = localStorage.getItem('wordsVersion');
+    const sw = localStorage.getItem('germanWords');
+
+    if(sw && sv === String(WORDS_VERSION)){
+        const loaded = JSON.parse(sw);
+        // ── ИСПРАВЛЕНИЕ 1: гарантируем поле cat у всех слов из localStorage ──
+        words = loaded.map(w => ({...w, cat: w.cat || 'all'}));
+        const su = localStorage.getItem('unknownWords');
+        if(su) unknownWords = JSON.parse(su);
     } else {
-        localStorage.removeItem('germanWords');localStorage.removeItem('unknownWords');
-        unknownWords=[];
-        words=initialWords.map((w,i)=>({id:Date.now()+i,german:w.german,polish:w.polish,cat:w.cat||'all',correct:0,wrong:0}));
+        // Старая версия или первый запуск — сбрасываем и загружаем свежие данные
+        localStorage.removeItem('germanWords');
+        localStorage.removeItem('unknownWords');
+        unknownWords = [];
+        words = initialWords.map((w, i) => ({
+            id: Date.now() + i,
+            german: w.german,
+            polish: w.polish,
+            cat: w.cat || 'all',
+            correct: 0,
+            wrong: 0
+        }));
         saveData();
     }
     updateDisplay();
 }
 
 function saveData(){
-    localStorage.setItem('wordsVersion',String(WORDS_VERSION));
-    localStorage.setItem('germanWords',JSON.stringify(words));
-    localStorage.setItem('unknownWords',JSON.stringify(unknownWords));
+    localStorage.setItem('wordsVersion', String(WORDS_VERSION));
+    localStorage.setItem('germanWords', JSON.stringify(words));
+    localStorage.setItem('unknownWords', JSON.stringify(unknownWords));
 }
 
 function addWord(){
@@ -626,9 +629,19 @@ function setCat(btn){
 
 function startRecall(){
     const count=parseInt(document.getElementById('rcCount').value);
-    const pool=words.filter(w=>rcCat==='all'||w.cat===rcCat);
+
+    // ── ИСПРАВЛЕНИЕ 2: фильтрация с учётом отсутствующего cat (fallback 'all') ──
+    const pool = words.filter(w => {
+        const cat = w.cat || 'all';
+        return rcCat === 'all' || cat === rcCat;
+    });
+
     rcWords=shuffleArray(pool).slice(0,Math.min(count,pool.length));
-    if(rcWords.length===0){alert('Brak słów w tej kategorii!');return;}
+
+    if(rcWords.length===0){
+        alert('Brak słów w tej kategorii! Wybierz "Wszystkie" lub inną kategorię.');
+        return;
+    }
 
     document.getElementById('phaseSettings').classList.add('hidden');
     document.getElementById('phaseCheck').classList.add('hidden');
@@ -724,7 +737,7 @@ document.addEventListener('DOMContentLoaded',()=>{
             if(e.key==='?'||e.key==='/'){e.preventDefault();markUnknown();}
         }
     });
-    // Domyślna aktywna kategoria
+    // Активная категория по умолчанию
     setCat(document.querySelector('[data-cat="all"]'));
     loadData();
 });
